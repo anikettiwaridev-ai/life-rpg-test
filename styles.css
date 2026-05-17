@@ -1,17 +1,113 @@
 :root {
   color-scheme: dark;
-  --bg: #080b12;
-  --panel: #101827;
-  --panel-2: #141f32;
-  --line: rgba(136, 211, 255, 0.18);
-  --text: #eaf4ff;
-  --muted: #8fa4ba;
-  --cyan: #4fd9ff;
-  --green: #55f2a4;
+  --bg: #03060f;
+  --panel: #080e1c;
+  --panel-2: #0c1428;
+  --line: rgba(79, 217, 255, 0.20);
+  --text: #eaf6ff;
+  --muted: #7a9ab8;
+  --cyan: #2dd4ff;
+  --green: #3dffa0;
   --gold: #ffd166;
   --red: #ff6978;
   --violet: #b48cff;
-  --shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+  --glow-a: rgba(45, 212, 255, 0.18);
+  --glow-b: rgba(61, 255, 160, 0.09);
+  --panel-glow: rgba(45, 212, 255, 0.20);
+  --panel-gradient: linear-gradient(180deg, rgba(8, 14, 28, 0.94), rgba(3, 6, 15, 0.97));
+  --player-gradient: linear-gradient(135deg, rgba(45, 212, 255, 0.16), rgba(61, 255, 160, 0.08));
+  --button-gradient: linear-gradient(135deg, rgba(45, 212, 255, 0.18), rgba(61, 255, 160, 0.12));
+  --accent-gradient: linear-gradient(90deg, var(--cyan), var(--green));
+  --cell-gradient: linear-gradient(135deg, var(--cyan), #1a5fff);
+  --bar-gradient: linear-gradient(180deg, var(--cyan), #1a5fff);
+  --control-bg: rgba(45, 212, 255, 0.05);
+  --soft-bg: rgba(45, 212, 255, 0.035);
+  --track-bg: rgba(45, 212, 255, 0.08);
+  --shadow: 0 16px 48px rgba(0, 0, 0, 0.44);
+
+  /* ── Glass Material System ── */
+  --glass-bg:         rgba(5, 10, 22, 0.68);
+  --glass-border:     rgba(45, 212, 255, 0.15);
+  --glass-border-top: rgba(45, 212, 255, 0.36);
+  --glass-specular:   rgba(45, 212, 255, 0.08);
+  --glass-sheen:      rgba(255, 255, 255, 0.055);
+  --glass-depth:      rgba(0, 0, 0, 0.28);
+  --glass-bloom:      rgba(45, 212, 255, 0.14);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.50), 0 2px 8px rgba(0,0,0,0.28), 0 0 0 1px rgba(45,212,255,0.07);
+}
+
+:root[data-theme="crimson"] {
+  --bg: #070101;
+  --panel: #170605;
+  --panel-2: #210908;
+  --line: rgba(255, 61, 36, 0.26);
+  --text: #fff1df;
+  --muted: #c49a7b;
+  --cyan: #ff3b24;
+  --green: #d7a338;
+  --gold: #ffc95a;
+  --red: #ff2d1b;
+  --violet: #9b2d24;
+  --glow-a: rgba(255, 39, 22, 0.18);
+  --glow-b: rgba(255, 191, 73, 0.1);
+  --panel-glow: rgba(255, 50, 28, 0.2);
+  --panel-gradient: linear-gradient(180deg, rgba(36, 8, 6, 0.94), rgba(10, 2, 2, 0.96));
+  --player-gradient: linear-gradient(135deg, rgba(80, 9, 5, 0.7), rgba(16, 2, 1, 0.9) 58%, rgba(209, 126, 29, 0.14));
+  --button-gradient: linear-gradient(135deg, rgba(255, 45, 27, 0.2), rgba(255, 201, 90, 0.13));
+  --accent-gradient: linear-gradient(90deg, #ff2d1b, #ffc95a);
+  --cell-gradient: linear-gradient(135deg, #ff2d1b, #ff8b22);
+  --bar-gradient: linear-gradient(180deg, #ffc95a, #ff2d1b);
+  --control-bg: rgba(255, 201, 90, 0.055);
+  --soft-bg: rgba(255, 61, 36, 0.045);
+  --track-bg: rgba(255, 201, 90, 0.09);
+  --shadow: 0 18px 56px rgba(0, 0, 0, 0.44);
+
+  /* ── Glass Material System (Crimson) ── */
+  --glass-bg:         rgba(22, 6, 4, 0.62);
+  --glass-border:     rgba(255, 59, 36, 0.14);
+  --glass-border-top: rgba(255, 140, 60, 0.30);
+  --glass-specular:   rgba(255, 100, 40, 0.07);
+  --glass-sheen:      rgba(255, 200, 100, 0.045);
+  --glass-depth:      rgba(0, 0, 0, 0.28);
+  --glass-bloom:      rgba(255, 59, 36, 0.12);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.44), 0 2px 8px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,59,36,0.06);
+}
+
+:root[data-theme="void"] {
+  --bg: #05010b;
+  --panel: #100822;
+  --panel-2: #160b31;
+  --line: rgba(149, 93, 255, 0.28);
+  --text: #f3ebff;
+  --muted: #a99ac6;
+  --cyan: #9d6cff;
+  --green: #d55cff;
+  --gold: #cfa8ff;
+  --red: #ff6aa2;
+  --violet: #7c3cff;
+  --glow-a: rgba(117, 45, 255, 0.22);
+  --glow-b: rgba(214, 87, 255, 0.12);
+  --panel-glow: rgba(138, 84, 255, 0.2);
+  --panel-gradient: linear-gradient(180deg, rgba(18, 8, 40, 0.94), rgba(7, 2, 18, 0.96));
+  --player-gradient: linear-gradient(135deg, rgba(76, 26, 168, 0.34), rgba(7, 2, 18, 0.94) 58%, rgba(214, 87, 255, 0.11));
+  --button-gradient: linear-gradient(135deg, rgba(157, 108, 255, 0.2), rgba(213, 92, 255, 0.12));
+  --accent-gradient: linear-gradient(90deg, #9d6cff, #d55cff);
+  --cell-gradient: linear-gradient(135deg, #7c3cff, #d55cff);
+  --bar-gradient: linear-gradient(180deg, #d55cff, #7c3cff);
+  --control-bg: rgba(157, 108, 255, 0.06);
+  --soft-bg: rgba(157, 108, 255, 0.045);
+  --track-bg: rgba(157, 108, 255, 0.09);
+  --shadow: 0 18px 58px rgba(0, 0, 0, 0.5);
+
+  /* ── Glass Material System (Void) ── */
+  --glass-bg:         rgba(10, 4, 24, 0.62);
+  --glass-border:     rgba(138, 84, 255, 0.14);
+  --glass-border-top: rgba(180, 130, 255, 0.30);
+  --glass-specular:   rgba(157, 108, 255, 0.07);
+  --glass-sheen:      rgba(200, 160, 255, 0.048);
+  --glass-depth:      rgba(0, 0, 0, 0.26);
+  --glass-bloom:      rgba(138, 84, 255, 0.12);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.46), 0 2px 8px rgba(0,0,0,0.24), 0 0 0 1px rgba(138,84,255,0.055);
 }
 
 * {
@@ -22,11 +118,209 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 20% 0%, rgba(79, 217, 255, 0.14), transparent 34rem),
-    radial-gradient(circle at 90% 15%, rgba(85, 242, 164, 0.08), transparent 28rem),
+    radial-gradient(circle at 20% 0%, var(--glow-a), transparent 34rem),
+    radial-gradient(circle at 90% 15%, var(--glow-b), transparent 28rem),
     var(--bg);
   color: var(--text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+:root[data-theme="aether"] body,
+body:not([data-theme]) {
+  background:
+    radial-gradient(circle at 18% -6%, rgba(45, 212, 255, 0.20), transparent 32rem),
+    radial-gradient(circle at 88% 12%, rgba(61, 255, 160, 0.09), transparent 28rem),
+    linear-gradient(180deg, #020509, #06101e 50%, #03060f);
+}
+
+:root[data-theme="crimson"] body {
+  background:
+    radial-gradient(circle at 15% -12%, rgba(255, 45, 27, 0.2), transparent 30rem),
+    radial-gradient(circle at 88% 8%, rgba(255, 201, 90, 0.12), transparent 28rem),
+    linear-gradient(135deg, #050000, #110302 58%, #050000);
+}
+
+:root[data-theme="void"] body {
+  background:
+    radial-gradient(circle at 22% -8%, rgba(124, 60, 255, 0.24), transparent 32rem),
+    radial-gradient(circle at 86% 20%, rgba(213, 92, 255, 0.13), transparent 30rem),
+    linear-gradient(180deg, #030008, #100028 48%, #05010b);
+}
+
+/* ── Black Emerald ── */
+:root[data-theme="emerald"] {
+  --bg: #020805;
+  --panel: #060e08;
+  --panel-2: #091209;
+  --line: rgba(0, 220, 100, 0.18);
+  --text: #e8fff4;
+  --muted: #5a8a6a;
+  --cyan: #00e87a;
+  --green: #00ff99;
+  --gold: #a0ffd0;
+  --red: #ff4466;
+  --violet: #00c870;
+  --glow-a: rgba(0, 220, 100, 0.14);
+  --glow-b: rgba(0, 255, 140, 0.07);
+  --panel-glow: rgba(0, 210, 90, 0.16);
+  --panel-gradient: linear-gradient(180deg, rgba(5, 12, 6, 0.96), rgba(2, 6, 3, 0.98));
+  --player-gradient: linear-gradient(135deg, rgba(0, 60, 20, 0.30), rgba(2, 6, 3, 0.97) 65%, rgba(0, 200, 80, 0.09));
+  --button-gradient: linear-gradient(135deg, rgba(0, 220, 100, 0.14), rgba(0, 255, 140, 0.08));
+  --accent-gradient: linear-gradient(90deg, #00e87a, #00ff99);
+  --cell-gradient: linear-gradient(135deg, #00c864, #00ff99);
+  --bar-gradient: linear-gradient(180deg, #00ff99, #00c864);
+  --control-bg: rgba(0, 220, 100, 0.045);
+  --soft-bg: rgba(0, 220, 100, 0.03);
+  --track-bg: rgba(0, 220, 100, 0.07);
+  --shadow: 0 18px 56px rgba(0, 0, 0, 0.62);
+
+  --glass-bg:         rgba(2, 8, 4, 0.75);
+  --glass-border:     rgba(0, 210, 90, 0.13);
+  --glass-border-top: rgba(0, 255, 120, 0.28);
+  --glass-specular:   rgba(0, 230, 100, 0.06);
+  --glass-sheen:      rgba(80, 255, 160, 0.042);
+  --glass-depth:      rgba(0, 0, 0, 0.35);
+  --glass-bloom:      rgba(0, 200, 80, 0.11);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.58), 0 2px 8px rgba(0,0,0,0.36), 0 0 0 1px rgba(0,200,80,0.055);
+}
+
+:root[data-theme="emerald"] body {
+  background:
+    radial-gradient(circle at 16% -8%, rgba(0, 200, 80, 0.16), transparent 30rem),
+    radial-gradient(circle at 86% 10%, rgba(0, 255, 120, 0.07), transparent 26rem),
+    linear-gradient(180deg, #010603, #040c05 55%, #020805);
+}
+
+/* ── Obsidian Gold ── */
+:root[data-theme="obsidian"] {
+  --bg: #050400;
+  --panel: #0b0900;
+  --panel-2: #100d00;
+  --line: rgba(218, 165, 32, 0.18);
+  --text: #fff9ee;
+  --muted: #9a7c30;
+  --cyan: #e0aa20;
+  --green: #f5c842;
+  --gold: #ffd95a;
+  --red: #ff5533;
+  --violet: #c89010;
+  --glow-a: rgba(218, 165, 32, 0.16);
+  --glow-b: rgba(255, 210, 70, 0.08);
+  --panel-glow: rgba(210, 155, 20, 0.18);
+  --panel-gradient: linear-gradient(180deg, rgba(10, 8, 0, 0.97), rgba(4, 3, 0, 0.98));
+  --player-gradient: linear-gradient(135deg, rgba(70, 48, 0, 0.28), rgba(4, 3, 0, 0.98) 65%, rgba(210, 155, 20, 0.11));
+  --button-gradient: linear-gradient(135deg, rgba(218, 165, 32, 0.16), rgba(255, 210, 70, 0.09));
+  --accent-gradient: linear-gradient(90deg, #e0aa20, #f5c842);
+  --cell-gradient: linear-gradient(135deg, #c8900a, #f5c842);
+  --bar-gradient: linear-gradient(180deg, #ffd95a, #c8900a);
+  --control-bg: rgba(218, 165, 32, 0.05);
+  --soft-bg: rgba(218, 165, 32, 0.03);
+  --track-bg: rgba(218, 165, 32, 0.08);
+  --shadow: 0 18px 56px rgba(0, 0, 0, 0.66);
+
+  --glass-bg:         rgba(6, 5, 0, 0.80);
+  --glass-border:     rgba(200, 148, 18, 0.13);
+  --glass-border-top: rgba(255, 215, 80, 0.30);
+  --glass-specular:   rgba(225, 175, 35, 0.07);
+  --glass-sheen:      rgba(255, 225, 100, 0.044);
+  --glass-depth:      rgba(0, 0, 0, 0.40);
+  --glass-bloom:      rgba(200, 148, 18, 0.12);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.62), 0 2px 8px rgba(0,0,0,0.38), 0 0 0 1px rgba(200,148,18,0.06);
+}
+
+:root[data-theme="obsidian"] body {
+  background:
+    radial-gradient(circle at 20% -6%, rgba(180, 130, 10, 0.16), transparent 28rem),
+    radial-gradient(circle at 85% 12%, rgba(255, 200, 55, 0.07), transparent 25rem),
+    linear-gradient(180deg, #030200, #080600 55%, #050400);
+}
+
+/* ── Black Silver ── */
+:root[data-theme="silver"] {
+  --bg: #040404;
+  --panel: #0d0d0d;
+  --panel-2: #141414;
+  --line: rgba(200, 210, 220, 0.16);
+  --text: #f5f7fa;
+  --muted: #909aa8;
+  --cyan: #c8d4de;
+  --green: #e8eef4;
+  --gold: #ffffff;
+  --red: #ff6070;
+  --violet: #a0b0c0;
+  --glow-a: rgba(180, 200, 220, 0.12);
+  --glow-b: rgba(240, 245, 255, 0.07);
+  --panel-glow: rgba(160, 190, 210, 0.16);
+  --panel-gradient: linear-gradient(180deg, rgba(16, 16, 18, 0.96), rgba(6, 6, 7, 0.98));
+  --player-gradient: linear-gradient(135deg, rgba(60, 70, 80, 0.35), rgba(6, 6, 7, 0.96) 60%, rgba(180, 200, 220, 0.10));
+  --button-gradient: linear-gradient(135deg, rgba(180, 200, 220, 0.14), rgba(240, 245, 255, 0.08));
+  --accent-gradient: linear-gradient(90deg, #a0b8cc, #e8eef4);
+  --cell-gradient: linear-gradient(135deg, #708090, #d0dce8);
+  --bar-gradient: linear-gradient(180deg, #e0eaf4, #607080);
+  --control-bg: rgba(180, 200, 220, 0.05);
+  --soft-bg: rgba(180, 200, 220, 0.035);
+  --track-bg: rgba(180, 200, 220, 0.08);
+  --shadow: 0 18px 56px rgba(0, 0, 0, 0.60);
+
+  --glass-bg:         rgba(8, 8, 10, 0.68);
+  --glass-border:     rgba(160, 190, 210, 0.13);
+  --glass-border-top: rgba(230, 240, 255, 0.30);
+  --glass-specular:   rgba(200, 220, 240, 0.07);
+  --glass-sheen:      rgba(255, 255, 255, 0.055);
+  --glass-depth:      rgba(0, 0, 0, 0.32);
+  --glass-bloom:      rgba(160, 190, 210, 0.11);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.52), 0 2px 8px rgba(0,0,0,0.30), 0 0 0 1px rgba(160,190,210,0.055);
+}
+
+:root[data-theme="silver"] body {
+  background:
+    radial-gradient(circle at 20% -5%, rgba(150, 180, 200, 0.14), transparent 32rem),
+    radial-gradient(circle at 85% 18%, rgba(220, 230, 240, 0.08), transparent 28rem),
+    linear-gradient(180deg, #020202, #0c0c0e 50%, #040404);
+}
+
+/* ── Obsidian Cobalt ── */
+:root[data-theme="cobalt"] {
+  --bg: #00020e;
+  --panel: #000418;
+  --panel-2: #000622;
+  --line: rgba(40, 100, 255, 0.22);
+  --text: #e8f0ff;
+  --muted: #5070b0;
+  --cyan: #1a6fff;
+  --green: #4a9fff;
+  --gold: #80c0ff;
+  --red: #ff4455;
+  --violet: #0a4fff;
+  --glow-a: rgba(26, 111, 255, 0.20);
+  --glow-b: rgba(74, 159, 255, 0.10);
+  --panel-glow: rgba(20, 90, 255, 0.22);
+  --panel-gradient: linear-gradient(180deg, rgba(0, 4, 22, 0.96), rgba(0, 1, 8, 0.98));
+  --player-gradient: linear-gradient(135deg, rgba(10, 40, 140, 0.32), rgba(0, 1, 8, 0.98) 65%, rgba(26, 111, 255, 0.13));
+  --button-gradient: linear-gradient(135deg, rgba(26, 111, 255, 0.18), rgba(74, 159, 255, 0.10));
+  --accent-gradient: linear-gradient(90deg, #1a6fff, #4a9fff);
+  --cell-gradient: linear-gradient(135deg, #1040ee, #4a9fff);
+  --bar-gradient: linear-gradient(180deg, #4a9fff, #1040ee);
+  --control-bg: rgba(26, 111, 255, 0.055);
+  --soft-bg: rgba(26, 111, 255, 0.04);
+  --track-bg: rgba(26, 111, 255, 0.09);
+  --shadow: 0 18px 56px rgba(0, 0, 0, 0.66);
+
+  --glass-bg:         rgba(0, 3, 16, 0.78);
+  --glass-border:     rgba(26, 90, 255, 0.15);
+  --glass-border-top: rgba(80, 150, 255, 0.34);
+  --glass-specular:   rgba(40, 120, 255, 0.08);
+  --glass-sheen:      rgba(120, 180, 255, 0.050);
+  --glass-depth:      rgba(0, 0, 0, 0.40);
+  --glass-bloom:      rgba(20, 80, 255, 0.15);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.62), 0 2px 8px rgba(0,0,0,0.38), 0 0 0 1px rgba(26,90,255,0.07);
+}
+
+:root[data-theme="cobalt"] body {
+  background:
+    radial-gradient(circle at 20% -8%, rgba(20, 80, 255, 0.24), transparent 32rem),
+    radial-gradient(circle at 82% 14%, rgba(60, 140, 255, 0.12), transparent 28rem),
+    linear-gradient(180deg, #000108, #000310 50%, #00020e);
 }
 
 button,
@@ -51,8 +345,10 @@ button:disabled {
 }
 
 .sidebar {
-  border-right: 1px solid var(--line);
-  background: rgba(10, 16, 28, 0.88);
+  border-right: 1px solid var(--glass-border);
+  background: color-mix(in srgb, var(--glass-bg) 90%, transparent);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
   padding: 20px;
   position: sticky;
   top: 0;
@@ -74,12 +370,14 @@ button:disabled {
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(79, 217, 255, 0.6);
+  border: 1px solid var(--glass-border-top);
   color: var(--cyan);
-  background: rgba(79, 217, 255, 0.1);
-  box-shadow: 0 0 22px rgba(79, 217, 255, 0.16);
+  background: linear-gradient(135deg, var(--glass-sheen), var(--glow-a));
+  box-shadow: 0 0 22px var(--panel-glow), inset 0 1px 0 var(--glass-sheen);
   border-radius: 8px;
   font-weight: 900;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .brand h1,
@@ -123,12 +421,14 @@ button:disabled {
 .nav-button:hover,
 .nav-button.active {
   color: var(--text);
-  border-color: var(--line);
-  background: rgba(79, 217, 255, 0.08);
+  border-color: var(--glass-border-top);
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, var(--glow-a) 100%);
+  box-shadow: 0 0 12px var(--glass-bloom), inset 0 1px 0 var(--glass-sheen);
 }
 
 .main {
   min-width: 0;
+  overflow-x: hidden;
   padding: 24px;
 }
 
@@ -151,6 +451,7 @@ button:disabled {
   align-items: center;
 }
 
+.theme-select,
 .icon-button,
 .danger-button,
 .primary-button,
@@ -159,8 +460,20 @@ button:disabled {
   border-radius: 8px;
   border: 1px solid var(--line);
   color: var(--text);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--control-bg);
   padding: 8px 12px;
+}
+
+.theme-select {
+  max-width: 150px;
+  border-color: var(--line);
+  color: var(--text);
+  background: var(--control-bg);
+}
+
+.theme-select option {
+  color: var(--text);
+  background: var(--panel);
 }
 
 .icon-button {
@@ -175,10 +488,15 @@ button:disabled {
 }
 
 .primary-button {
-  border-color: rgba(85, 242, 164, 0.5);
-  background: linear-gradient(135deg, rgba(79, 217, 255, 0.16), rgba(85, 242, 164, 0.12));
+  border-color: var(--glass-border-top);
+  background:
+    linear-gradient(135deg, var(--glass-sheen) 0%, transparent 50%),
+    var(--button-gradient);
   color: white;
   font-weight: 700;
+  box-shadow: 0 0 14px var(--glass-bloom), inset 0 1px 0 var(--glass-sheen);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .danger-button {
@@ -211,10 +529,20 @@ button:disabled {
 .card,
 .item-row,
 .form-panel {
-  border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(20, 31, 50, 0.9), rgba(14, 22, 36, 0.92));
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
+  background:
+    linear-gradient(
+      160deg,
+      var(--glass-sheen) 0%,
+      transparent 40%
+    ),
+    var(--panel-gradient);
+  background-color: var(--glass-bg);
   border-radius: 8px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(10px) saturate(1.3);
+  -webkit-backdrop-filter: blur(10px) saturate(1.3);
 }
 
 .panel,
@@ -244,11 +572,20 @@ button:disabled {
 
 .player-card {
   padding: 20px;
-  border: 1px solid rgba(79, 217, 255, 0.24);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
   background:
-    linear-gradient(135deg, rgba(79, 217, 255, 0.14), rgba(85, 242, 164, 0.08)),
-    rgba(16, 24, 39, 0.92);
+    linear-gradient(
+      145deg,
+      var(--glass-sheen) 0%,
+      transparent 35%
+    ),
+    var(--player-gradient),
+    var(--glass-bg);
   border-radius: 8px;
+  box-shadow: var(--glass-shadow), 0 0 40px var(--glass-bloom);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
 }
 
 .player-card-compact {
@@ -280,13 +617,16 @@ button:disabled {
   gap: 6px;
   align-items: center;
   min-height: 28px;
-  border: 1px solid rgba(79, 217, 255, 0.25);
-  background: rgba(79, 217, 255, 0.08);
+  border: 1px solid var(--glass-border-top);
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, var(--glow-a) 100%);
   color: var(--cyan);
   padding: 4px 9px;
   border-radius: 999px;
   font-size: 0.82rem;
   font-weight: 700;
+  box-shadow: 0 0 10px var(--glass-bloom), inset 0 1px 0 var(--glass-sheen);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .level-number {
@@ -299,7 +639,7 @@ button:disabled {
 .progress-track {
   height: 12px;
   width: 100%;
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--track-bg);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
   overflow: hidden;
@@ -309,8 +649,8 @@ button:disabled {
   height: 100%;
   width: var(--value, 0%);
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--cyan), var(--green));
-  box-shadow: 0 0 18px rgba(79, 217, 255, 0.5);
+  background: var(--accent-gradient);
+  box-shadow: 0 0 18px var(--panel-glow);
 }
 
 .progress-meta,
@@ -352,10 +692,14 @@ button:disabled {
   grid-template-rows: auto 1fr auto;
   gap: 8px;
   justify-items: center;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
+  background: linear-gradient(180deg, var(--glass-sheen) 0%, transparent 60%), var(--glass-bg);
   border-radius: 8px;
   padding: 10px 8px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 var(--glass-sheen), 0 4px 16px var(--glass-depth);
 }
 
 .stat-tower.discipline { border-color: rgba(255, 209, 102, 0.28); }
@@ -387,15 +731,15 @@ button:disabled {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--track-bg);
 }
 
 .vertical-progress span {
   width: 100%;
   min-height: 4px;
   border-radius: inherit;
-  background: linear-gradient(180deg, var(--cyan), var(--green));
-  box-shadow: 0 0 14px rgba(79, 217, 255, 0.42);
+  background: var(--bar-gradient);
+  box-shadow: 0 0 14px var(--panel-glow);
 }
 
 .stat-tower small {
@@ -480,10 +824,15 @@ button:disabled {
   width: 100%;
   min-height: 40px;
   border-radius: 8px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
   color: var(--text);
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, transparent 60%), var(--control-bg);
   padding: 8px 10px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .pill-row {
@@ -505,9 +854,13 @@ button:disabled {
 
 .skill-node {
   padding: 14px;
-  border: 1px solid var(--line);
-  background: rgba(16, 24, 39, 0.86);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
+  background: linear-gradient(145deg, var(--glass-sheen) 0%, transparent 40%), var(--glass-bg);
   border-radius: 8px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 var(--glass-sheen), var(--glass-shadow);
 }
 
 .skill-steps {
@@ -525,7 +878,7 @@ button:disabled {
 
 .skill-step.active {
   background: var(--green);
-  box-shadow: 0 0 12px rgba(85, 242, 164, 0.45);
+  box-shadow: 0 0 12px var(--panel-glow);
 }
 
 .achievement-grid {
@@ -583,11 +936,14 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 10px;
-  border: 1px solid rgba(136, 211, 255, 0.14);
-  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, transparent 50%), var(--glass-bg);
   border-radius: 8px;
   color: var(--text);
   padding: 8px 10px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .daily-habit-check input {
@@ -596,16 +952,71 @@ button:disabled {
 }
 
 .habit-matrix {
-  overflow-x: auto;
+  width: 100%;
+  overflow-x: hidden;
   padding-bottom: 4px;
+}
+
+.habit-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(112px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.habit-summary-strip div,
+.week-card {
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
+  background: linear-gradient(145deg, var(--glass-sheen) 0%, transparent 50%), var(--glass-bg);
+  border-radius: 8px;
+  padding: 10px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
+}
+
+.habit-summary-strip span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.habit-summary-strip strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.weekly-overview {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.week-bars {
+  height: 72px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  align-items: end;
+  margin: 10px 0;
+}
+
+.week-bars span {
+  min-height: 8px;
+  border-radius: 4px 4px 0 0;
+  background: var(--bar-gradient);
+  box-shadow: 0 0 10px var(--panel-glow);
 }
 
 .habit-matrix-row {
   display: grid;
-  grid-template-columns: minmax(150px, 1.3fr) repeat(var(--days), 20px) 58px;
-  gap: 8px;
+  grid-template-columns: minmax(118px, 1.35fr) 34px 34px 34px repeat(var(--days), minmax(10px, 1fr)) 42px;
+  gap: 5px;
   align-items: center;
-  min-width: max-content;
   padding: 6px 0;
 }
 
@@ -619,25 +1030,38 @@ button:disabled {
   font-size: 0.86rem;
 }
 
+.habit-count,
+.daily-cell-percent {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.done-count,
+.daily-cell-percent {
+  color: var(--cyan);
+}
+
 .habit-dot {
-  width: 16px;
+  width: min(16px, 100%);
   height: 16px;
   border: 1px solid rgba(136, 211, 255, 0.42);
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--soft-bg);
   border-radius: 4px;
   padding: 0;
   cursor: pointer;
+  justify-self: center;
 }
 
 .habit-dot:hover {
   border-color: var(--cyan);
-  background: rgba(79, 217, 255, 0.12);
+  background: var(--glow-a);
 }
 
 .habit-dot.done {
-  border-color: rgba(79, 217, 255, 0.7);
-  background: linear-gradient(135deg, var(--cyan), #2e73ff);
-  box-shadow: 0 0 12px rgba(79, 217, 255, 0.34);
+  border-color: var(--cyan);
+  background: var(--cell-gradient);
+  box-shadow: 0 0 12px var(--panel-glow);
 }
 
 .habit-dot.today,
@@ -650,6 +1074,14 @@ button:disabled {
   color: var(--cyan);
   font-size: 0.78rem;
   text-align: right;
+}
+
+.habit-matrix-foot {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 .calendar-weekdays,
@@ -669,9 +1101,13 @@ button:disabled {
 .calendar-day,
 .calendar-empty {
   min-height: 112px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
+  background: linear-gradient(160deg, var(--glass-sheen) 0%, transparent 50%), var(--glass-bg);
   border-radius: 8px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
 }
 
 .calendar-day {
@@ -682,8 +1118,8 @@ button:disabled {
 }
 
 .calendar-day.perfect {
-  border-color: rgba(85, 242, 164, 0.5);
-  box-shadow: 0 0 18px rgba(85, 242, 164, 0.12);
+  border-color: var(--green);
+  box-shadow: 0 0 18px var(--panel-glow);
 }
 
 .calendar-date {
@@ -702,7 +1138,7 @@ button:disabled {
   height: 7px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--track-bg);
 }
 
 .calendar-day-bar span {
@@ -730,7 +1166,7 @@ button:disabled {
 
 .task-dot:hover {
   transform: scale(1.25);
-  box-shadow: 0 0 12px rgba(79, 217, 255, 0.35);
+  box-shadow: 0 0 12px var(--panel-glow);
 }
 
 .task-dot.due {
@@ -750,7 +1186,7 @@ button:disabled {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--soft-bg);
 }
 
 .task-advanced summary {
@@ -768,6 +1204,974 @@ button:disabled {
 
 .chart-box {
   min-height: 320px;
+}
+
+.workout-os {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.workout-main {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.workout-plans-panel {
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+}
+
+.workout-plan-form,
+.workout-plan-list,
+.workout-exercise-list,
+.workout-session-exercises,
+.exercise-section-list {
+  display: grid;
+  gap: 10px;
+}
+
+.workout-plan-form input,
+.workout-plan-form textarea,
+.workout-day-form input,
+.workout-plan-editor input,
+.workout-day-settings input,
+.workout-volume-grid input,
+.workout-exercise-notes,
+.exercise-filter-bar input,
+.exercise-filter-bar select,
+.workout-log-form select,
+.workout-log-form input,
+.workout-history-filters select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--control-bg);
+  padding: 8px 10px;
+}
+
+.workout-plan-form textarea {
+  resize: vertical;
+}
+
+.workout-inline-fields,
+.workout-card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.workout-inline-fields input[type="color"],
+.workout-day-form input[type="color"],
+.workout-plan-editor input[type="color"],
+.workout-day-settings input[type="color"] {
+  min-width: 44px;
+  max-width: 58px;
+  padding: 4px;
+}
+
+.workout-plan-card,
+.exercise-card,
+.workout-exercise-row,
+.workout-history-item,
+.workout-session-exercises article {
+  border: 1px solid var(--line);
+  background: var(--soft-bg);
+  border-radius: 8px;
+}
+
+.workout-plan-card {
+  padding: 10px;
+}
+
+.workout-plan-card.active {
+  border-color: var(--workout-color);
+  box-shadow: 0 0 18px var(--panel-glow);
+}
+
+.workout-plan-card > button,
+.workout-history-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  padding: 0;
+  text-align: left;
+}
+
+.workout-plan-card strong,
+.workout-history-item strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workout-plan-card small,
+.workout-history-item small,
+.workout-exercise-core span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.workout-color-dot {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border-radius: 999px;
+  background: var(--workout-color, var(--cyan));
+  box-shadow: 0 0 12px var(--workout-color, var(--cyan));
+}
+
+.workout-color-dot.large {
+  width: 18px;
+  height: 18px;
+}
+
+.danger-text {
+  color: var(--red);
+}
+
+.workout-log-form {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(160px, 1fr) 150px auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.workout-builder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.workout-plan-editor,
+.workout-day-settings {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 90px minmax(160px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.workout-day-form {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 70px minmax(160px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.workout-day-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+.workout-day-tabs button,
+.exercise-filter-tabs button {
+  min-height: 34px;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--control-bg);
+  padding: 7px 10px;
+}
+
+.workout-day-tabs button.active,
+.exercise-filter-tabs button.active {
+  color: var(--text);
+  border-color: var(--workout-color, var(--cyan));
+  background: var(--glow-a);
+}
+
+.workout-day-editor {
+  display: grid;
+  gap: 12px;
+}
+
+.workout-exercise-row {
+  display: grid;
+  grid-template-columns: 22px minmax(150px, 1fr) minmax(220px, 1.2fr) minmax(140px, 0.8fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+}
+
+.workout-exercise-row[draggable="true"] {
+  cursor: grab;
+}
+
+.drag-handle {
+  color: var(--muted);
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.workout-volume-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: 8px;
+}
+
+.workout-volume-grid label {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.workout-exercise-notes {
+  min-width: 0;
+}
+
+.exercise-filter-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.exercise-filter-bar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 150px 130px minmax(180px, 0.7fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.exercise-group {
+  display: grid;
+  gap: 10px;
+}
+
+.exercise-group-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+}
+
+.exercise-group-title h4 {
+  margin: 0;
+  color: var(--text);
+}
+
+.exercise-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.exercise-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.exercise-card-head,
+.exercise-meta-row,
+.exercise-neighbors {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: start;
+}
+
+.exercise-card h4,
+.exercise-card p {
+  margin: 0;
+}
+
+.exercise-card-head p,
+.exercise-meta-row,
+.exercise-neighbors,
+.exercise-note {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.difficulty-chip,
+.tag-row span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--cyan);
+  background: var(--glow-a);
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.progression-roadmap {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.progression-roadmap span {
+  min-width: max-content;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--control-bg);
+  padding: 5px 7px;
+  font-size: 0.68rem;
+}
+
+.progression-roadmap span.current {
+  color: var(--text);
+  border-color: var(--cyan);
+  background: var(--button-gradient);
+  box-shadow: 0 0 12px var(--panel-glow);
+}
+
+.progression-roadmap i {
+  width: 18px;
+  height: 1px;
+  flex: 0 0 18px;
+  background: var(--line);
+}
+
+.tag-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.workout-history-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 14px;
+}
+
+.workout-calendar-panel,
+.workout-history-panel {
+  min-width: 0;
+}
+
+.workout-history-panel {
+  grid-column: 1 / -1;
+}
+
+.workout-weekdays,
+.workout-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.workout-weekdays {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-align: right;
+  margin-bottom: 8px;
+}
+
+.workout-calendar-day,
+.workout-calendar-empty {
+  min-height: 94px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft-bg);
+}
+
+.workout-calendar-day {
+  width: 100%;
+  display: grid;
+  align-content: space-between;
+  gap: 8px;
+  color: var(--text);
+  padding: 9px;
+  text-align: left;
+}
+
+button.workout-calendar-day.logged {
+  border-color: color-mix(in srgb, var(--workout-color, var(--cyan)) 54%, var(--line));
+  box-shadow: inset 0 -24px 46px color-mix(in srgb, var(--workout-color, var(--cyan)) 12%, transparent);
+}
+
+.workout-calendar-date {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+}
+
+.workout-calendar-date strong {
+  color: var(--text);
+}
+
+.workout-calendar-markers {
+  min-height: 14px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.workout-calendar-markers span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--workout-color, var(--cyan));
+  box-shadow: 0 0 10px var(--workout-color, var(--cyan));
+}
+
+.workout-calendar-day small {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workout-session-details {
+  min-height: 280px;
+}
+
+.workout-session-exercises article {
+  padding: 10px;
+}
+
+.workout-session-exercises strong,
+.workout-session-exercises span,
+.workout-session-exercises p {
+  display: block;
+}
+
+.workout-session-exercises span,
+.workout-session-exercises p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.workout-history-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.workout-history-item {
+  padding: 10px;
+}
+
+.workout-focus-shell {
+  display: grid;
+  gap: 14px;
+}
+
+.workout-focus-shell.is-empty {
+  min-height: calc(100vh - 160px);
+  place-items: center;
+}
+
+.workout-entry {
+  width: min(620px, 100%);
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 40px 18px;
+}
+
+.workout-entry-glow {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow-a), transparent 62%);
+  filter: blur(18px);
+  opacity: 0.9;
+}
+
+.workout-entry-card {
+  position: relative;
+  width: min(460px, 100%);
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-gradient);
+  box-shadow: var(--shadow);
+  padding: 34px;
+  text-align: center;
+}
+
+.workout-entry-card h3 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+}
+
+.workout-command {
+  display: grid;
+  gap: 14px;
+}
+
+.workout-command-head,
+.workout-selected-head,
+.builder-section-heading,
+.builder-config-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+}
+
+.workout-command-head h3,
+.workout-selected-head h3,
+.builder-section-heading h4,
+.builder-config-heading h4 {
+  margin: 0;
+}
+
+.workout-plan-dashboard {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.workout-plan-strip,
+.workout-plan-detail,
+.workout-selected-plan {
+  min-width: 0;
+}
+
+.workout-plan-strip {
+  display: grid;
+  gap: 12px;
+}
+
+.workout-plan-strip h4 {
+  margin: 0;
+}
+
+.workout-plan-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.workout-plan-card.compact {
+  padding: 10px;
+}
+
+.workout-plan-card.compact > button {
+  align-items: start;
+}
+
+.workout-selected-plan {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-gradient);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.workout-selected-head > div:first-child {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+}
+
+.workout-selected-head p {
+  grid-column: 2;
+  margin: 2px 0 0;
+}
+
+.training-day-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.training-day-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft-bg);
+  padding: 12px;
+}
+
+.training-day-card:hover {
+  border-color: var(--workout-color, var(--cyan));
+  box-shadow: 0 0 18px var(--panel-glow);
+}
+
+.training-day-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.training-day-head > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 8px;
+}
+
+.training-day-head h4,
+.training-day-head p {
+  margin: 0;
+}
+
+.training-day-head p {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.training-day-head > span {
+  color: var(--cyan);
+  font-weight: 800;
+}
+
+.training-day-exercises {
+  display: grid;
+  gap: 7px;
+}
+
+.training-day-exercises div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 7px;
+}
+
+.training-day-exercises strong,
+.training-day-exercises span {
+  font-size: 0.83rem;
+}
+
+.training-day-exercises span {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.workout-history-surface {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  gap: 14px;
+}
+
+.workout-history-surface .workout-history-panel {
+  grid-column: 1 / -1;
+}
+
+.workout-calendar-grid.compact .workout-calendar-day,
+.workout-calendar-grid.compact .workout-calendar-empty {
+  min-height: 78px;
+}
+
+.workout-builder-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(8px);
+  padding: 24px;
+}
+
+.workout-builder-modal {
+  width: min(1060px, 100%);
+  max-height: min(820px, calc(100vh - 48px));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-gradient);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.workout-builder-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding: 16px;
+}
+
+.workout-builder-top h3 {
+  margin: 4px 0 0;
+}
+
+.workout-stepper {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 16px;
+}
+
+.workout-stepper button {
+  min-width: 0;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--control-bg);
+  padding: 7px;
+  font-size: 0.72rem;
+}
+
+.workout-stepper button.active {
+  color: var(--text);
+  border-color: var(--cyan);
+  background: var(--glow-a);
+}
+
+.workout-stepper button:disabled {
+  opacity: 0.42;
+}
+
+.workout-stepper span {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--soft-bg);
+  color: var(--cyan);
+  font-weight: 800;
+}
+
+.workout-builder-body {
+  min-height: 0;
+  overflow: auto;
+  padding: 18px;
+}
+
+.builder-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.builder-choice-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.builder-choice-card {
+  min-height: 150px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--soft-bg);
+  padding: 18px;
+  text-align: left;
+}
+
+.builder-choice-card:hover,
+.builder-choice-card.active,
+.progression-group-card.active {
+  border-color: var(--cyan);
+  background: var(--glow-a);
+  box-shadow: 0 0 20px var(--panel-glow);
+}
+
+.builder-choice-card strong {
+  font-size: 1.2rem;
+}
+
+.builder-choice-card span {
+  color: var(--muted);
+}
+
+.builder-form,
+.builder-split {
+  display: grid;
+  gap: 12px;
+}
+
+.builder-form {
+  grid-template-columns: minmax(0, 1fr) 90px auto;
+  align-items: end;
+}
+
+.builder-form .full,
+.builder-config-heading {
+  grid-column: 1 / -1;
+}
+
+.builder-form textarea,
+.builder-form input,
+.builder-existing-days button,
+.builder-library-tools input,
+.builder-library-tools select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--control-bg);
+  padding: 8px 10px;
+}
+
+.builder-form textarea {
+  resize: vertical;
+}
+
+.builder-split {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  align-items: start;
+}
+
+.builder-existing-days {
+  display: grid;
+  gap: 8px;
+}
+
+.builder-existing-days h4 {
+  margin: 0;
+}
+
+.builder-existing-days button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  text-align: left;
+}
+
+.builder-existing-days button.active {
+  border-color: var(--cyan);
+  background: var(--glow-a);
+}
+
+.builder-existing-days strong,
+.builder-existing-days small {
+  display: block;
+}
+
+.builder-existing-days small {
+  color: var(--muted);
+}
+
+.builder-section-heading {
+  margin-bottom: 14px;
+}
+
+.progression-group-list,
+.compact-exercise-list {
+  display: grid;
+  gap: 8px;
+}
+
+.progression-group-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--soft-bg);
+  padding: 12px;
+  text-align: left;
+}
+
+.progression-group-card strong,
+.progression-group-card small {
+  display: block;
+}
+
+.progression-group-card small {
+  color: var(--muted);
+}
+
+.builder-library-tools {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 150px 120px;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.compact-exercise-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft-bg);
+  padding: 9px;
+}
+
+.compact-exercise-main {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  padding: 0;
+  text-align: left;
+}
+
+.compact-exercise-main strong,
+.compact-exercise-main small {
+  display: block;
+}
+
+.compact-exercise-main small {
+  color: var(--muted);
+}
+
+.progression-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.progression-dots i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--control-bg);
+}
+
+.progression-dots i.active {
+  border-color: var(--cyan);
+  background: var(--accent-gradient);
+  box-shadow: 0 0 10px var(--panel-glow);
+}
+
+.compact-exercise-details {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.compact-exercise-details p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 canvas {
@@ -812,14 +2216,47 @@ canvas {
 
   .hero-panel,
   .dashboard-command,
+  .workout-os,
+  .workout-plan-dashboard,
+  .workout-history-surface,
+  .builder-choice-grid,
+  .builder-split,
+  .builder-form,
+  .builder-library-tools,
+  .workout-log-form,
+  .workout-plan-editor,
+  .workout-day-settings,
+  .workout-day-form,
+  .exercise-filter-bar,
+  .workout-history-grid,
   .grid.two,
   .grid.three,
   .grid.four {
     grid-template-columns: 1fr;
   }
 
+  .workout-plans-panel {
+    position: static;
+    max-height: none;
+  }
+
+  .workout-exercise-row {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .workout-volume-grid,
+  .workout-exercise-notes,
+  .workout-exercise-row .workout-card-actions {
+    grid-column: 1 / -1;
+  }
+
   .stat-tower-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .habit-summary-strip,
+  .weekly-overview {
+    grid-template-columns: 1fr;
   }
 
   .form-grid {
@@ -838,6 +2275,14 @@ canvas {
 
   .task-split-grid {
     grid-template-columns: 1fr;
+  }
+
+  .workout-history-panel {
+    grid-column: auto;
+  }
+
+  .workout-stepper {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -862,4 +2307,929 @@ canvas {
   .row-actions {
     justify-content: flex-start;
   }
+
+  .workout-history-filters,
+  .workout-weekdays,
+  .workout-calendar-grid {
+    gap: 5px;
+  }
+
+  .workout-builder-backdrop {
+    padding: 10px;
+  }
+
+  .workout-builder-modal {
+    max-height: calc(100vh - 20px);
+  }
+
+  .workout-stepper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compact-exercise-row,
+  .compact-exercise-main,
+  .workout-command-head,
+  .workout-selected-head,
+  .builder-section-heading,
+  .builder-config-heading {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .workout-command-head,
+  .workout-selected-head,
+  .builder-section-heading,
+  .builder-config-heading {
+    flex-direction: column;
+  }
+
+  .workout-calendar-day,
+  .workout-calendar-empty {
+    min-height: 76px;
+  }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   LIQUID REACTIVE UI SYSTEM — CSS Layer
+   Appended modularly. Does not override existing styles.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── App Shell Z-layering ── */
+.app-shell {
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Liquid Ripple Effect ── */
+.liquid-ripple {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(0);
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow-a) 0%, transparent 70%);
+  border: 1px solid rgba(255,255,255,0.12);
+  animation: liquid-ripple-anim 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes liquid-ripple-anim {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+  60%  { opacity: 0.3; }
+  100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+}
+
+/* ── Liquid Hover Target — gradient follows cursor ── */
+.liquid-hover-target {
+  transition:
+    box-shadow 0.38s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.38s ease,
+    transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+
+.liquid-hover-active {
+  --lh-x: var(--mx, 50%);
+  --lh-y: var(--my, 50%);
+  box-shadow:
+    var(--shadow),
+    0 0 28px var(--panel-glow),
+    inset 0 0 40px 0 transparent;
+  border-color: color-mix(in srgb, var(--line) 60%, var(--cyan) 40%) !important;
+  transform: translateY(-1px);
+  background-image:
+    radial-gradient(
+      circle at var(--lh-x) var(--lh-y),
+      var(--glow-a) 0%,
+      transparent 65%
+    ) !important;
+  background-blend-mode: screen;
+}
+
+/* Override — don't disrupt specific backgrounds */
+.liquid-hover-active.player-card {
+  background-image:
+    radial-gradient(
+      circle at var(--lh-x) var(--lh-y),
+      var(--glow-a) 0%,
+      transparent 55%
+    ),
+    var(--player-gradient) !important;
+}
+
+/* ── Button liquid press effect ── */
+.primary-button,
+.ghost-button,
+.nav-button,
+.icon-button {
+  transition:
+    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+  will-change: transform;
+}
+
+.primary-button:hover,
+.ghost-button:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 6px 22px var(--panel-glow);
+}
+
+.primary-button:active,
+.ghost-button:active,
+.nav-button:active {
+  transform: scale(0.97) translateY(1px);
+  box-shadow: 0 2px 8px var(--panel-glow);
+  transition-duration: 0.08s;
+}
+
+/* ── Nav button liquid glow ── */
+.nav-button {
+  transition:
+    color 0.22s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-button:hover {
+  transform: translateX(3px);
+  box-shadow: 0 0 16px var(--panel-glow);
+}
+
+.nav-button.active {
+  box-shadow:
+    0 0 20px var(--panel-glow),
+    inset 0 0 16px var(--glow-a);
+  border-color: color-mix(in srgb, var(--line) 40%, var(--cyan) 60%);
+}
+
+/* ── Panel ambient shimmer overlay ── */
+.panel,
+.card,
+.form-panel,
+.player-card {
+  position: relative;
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+/* Shimmer pseudo-element */
+[data-visual-mode="liquid"] .panel::before,
+[data-visual-mode="liquid"] .card::before,
+[data-visual-mode="liquid"] .form-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    circle at var(--shimmer-x, 50%) var(--shimmer-y, 50%),
+    var(--glow-a) 0%,
+    transparent 62%
+  );
+  opacity: 0.45;
+  transition: opacity 0.6s ease;
+}
+
+[data-visual-mode="reduced"] .panel::before,
+[data-visual-mode="reduced"] .card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    circle at var(--shimmer-x, 50%) var(--shimmer-y, 50%),
+    var(--glow-a) 0%,
+    transparent 62%
+  );
+  opacity: 0.2;
+}
+
+/* Ensure panel children render above shimmer */
+.panel > *,
+.card > *,
+.form-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Progress fill animation ── */
+[data-visual-mode="liquid"] .progress-fill,
+[data-visual-mode="reduced"] .progress-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-visual-mode="liquid"] .progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.22) 50%,
+    transparent 100%
+  );
+  animation: progress-sheen 2.4s linear infinite;
+}
+
+@keyframes progress-sheen {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* ── Stat tower liquid glow pulse ── */
+[data-visual-mode="liquid"] .vertical-progress span {
+  animation: stat-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes stat-pulse {
+  0%   { box-shadow: 0 0 8px var(--panel-glow); }
+  100% { box-shadow: 0 0 22px var(--panel-glow), 0 0 40px var(--glow-a); }
+}
+
+/* ── Skill steps animated fill ── */
+[data-visual-mode="liquid"] .skill-step.active,
+[data-visual-mode="reduced"] .skill-step.active {
+  animation: skill-step-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes skill-step-glow {
+  0%   { box-shadow: 0 0 6px var(--panel-glow); opacity: 0.85; }
+  100% { box-shadow: 0 0 16px var(--panel-glow), 0 0 28px var(--glow-a); opacity: 1; }
+}
+
+/* ── Badge liquid shimmer ── */
+[data-visual-mode="liquid"] .badge {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-visual-mode="liquid"] .badge::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 30%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.18),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: badge-sheen 4s linear infinite;
+}
+
+@keyframes badge-sheen {
+  0%   { left: -60%; }
+  100% { left: 140%; }
+}
+
+/* ── Achievement card unlock glow ── */
+.achievement:not(.locked) {
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+[data-visual-mode="liquid"] .achievement:not(.locked),
+[data-visual-mode="reduced"] .achievement:not(.locked) {
+  box-shadow:
+    var(--shadow),
+    0 0 24px var(--panel-glow);
+  border-color: color-mix(in srgb, var(--line) 30%, var(--cyan) 70%);
+}
+
+/* ── Brand mark liquid pulse ── */
+[data-visual-mode="liquid"] .brand-mark {
+  animation: brand-pulse 4s ease-in-out infinite;
+}
+
+@keyframes brand-pulse {
+  0%, 100% { box-shadow: 0 0 22px var(--panel-glow); }
+  50%       { box-shadow: 0 0 38px var(--panel-glow), 0 0 60px var(--glow-a); }
+}
+
+/* ── Calendar day hover ── */
+[data-visual-mode="liquid"] .calendar-day:hover,
+[data-visual-mode="reduced"] .calendar-day:hover {
+  border-color: color-mix(in srgb, var(--line) 40%, var(--cyan) 60%);
+  box-shadow: 0 0 18px var(--panel-glow);
+  transform: scale(1.018);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+/* ── Habit dot hover glow ── */
+[data-visual-mode="liquid"] .habit-dot:hover,
+[data-visual-mode="reduced"] .habit-dot:hover {
+  box-shadow: 0 0 12px var(--panel-glow);
+  transform: scale(1.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-visual-mode="liquid"] .habit-dot.done {
+  animation: habit-done-pulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes habit-done-pulse {
+  0%   { box-shadow: 0 0 8px var(--panel-glow); }
+  100% { box-shadow: 0 0 20px var(--panel-glow), 0 0 32px var(--glow-a); }
+}
+
+/* ── Level number glow ── */
+[data-visual-mode="liquid"] .level-number,
+[data-visual-mode="reduced"] .level-number {
+  text-shadow: 0 0 18px var(--gold), 0 0 36px rgba(255,209,102,0.3);
+  animation: level-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes level-glow {
+  0%   { text-shadow: 0 0 14px var(--gold); }
+  100% { text-shadow: 0 0 28px var(--gold), 0 0 50px rgba(255,209,102,0.4); }
+}
+
+/* ── Player name editable glow ── */
+[data-visual-mode="liquid"] .editable-name:focus,
+[data-visual-mode="reduced"] .editable-name:focus {
+  outline: none;
+  border-bottom: 1px solid var(--cyan);
+  text-shadow: 0 0 12px var(--panel-glow);
+}
+
+/* ── Input focus liquid effect ── */
+.field input:focus,
+.field select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px var(--glow-a), 0 0 16px var(--panel-glow);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+/* ── Boss card defeat glow ── */
+[data-visual-mode="liquid"] .boss-card:has(.badge:last-child) {
+  border-color: var(--green);
+  box-shadow: 0 0 28px var(--panel-glow);
+}
+
+/* ── Week bars liquid wave animation ── */
+[data-visual-mode="liquid"] .week-bars span {
+  animation: bar-wave 2.2s ease-in-out infinite alternate;
+  animation-delay: calc(var(--i, 0) * 0.12s);
+}
+
+@keyframes bar-wave {
+  0%   { opacity: 0.8; }
+  100% { opacity: 1; box-shadow: 0 0 10px var(--panel-glow); }
+}
+
+/* ── Visual mode toggle button ── */
+.visual-mode-toggle {
+  position: relative;
+  overflow: hidden;
+  font-size: 1rem;
+  color: var(--cyan) !important;
+  border-color: color-mix(in srgb, var(--line) 50%, var(--cyan) 50%) !important;
+  transition: all 0.3s ease;
+}
+
+[data-visual-mode="liquid"] .visual-mode-toggle {
+  box-shadow: 0 0 14px var(--panel-glow);
+  animation: mode-btn-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes mode-btn-glow {
+  0%   { box-shadow: 0 0 10px var(--panel-glow); }
+  100% { box-shadow: 0 0 22px var(--panel-glow), 0 0 36px var(--glow-a); }
+}
+
+/* ── Topbar title liquid shimmer ── */
+[data-visual-mode="liquid"] .topbar h2 {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px var(--panel-glow));
+}
+
+/* ── Player card border animation ── */
+[data-visual-mode="liquid"] .player-card {
+  animation: player-card-border 5s linear infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes player-card-border {
+  0%   { box-shadow: 0 0 32px var(--panel-glow); }
+  50%  { box-shadow: 0 0 48px var(--panel-glow), 0 0 80px var(--glow-a); }
+  100% { box-shadow: 0 0 32px var(--panel-glow); }
+}
+
+/* ── Stat card colored glow ── */
+[data-visual-mode="liquid"] .stat-tower.discipline  { animation: tower-glow-dis 4s ease-in-out infinite alternate; }
+[data-visual-mode="liquid"] .stat-tower.intelligence{ animation: tower-glow-int 4s ease-in-out infinite alternate 0.5s; }
+[data-visual-mode="liquid"] .stat-tower.strength    { animation: tower-glow-str 4s ease-in-out infinite alternate 1s; }
+[data-visual-mode="liquid"] .stat-tower.communication{ animation: tower-glow-com 4s ease-in-out infinite alternate 1.5s; }
+
+@keyframes tower-glow-dis  { 0%{ box-shadow: none; } 100%{ box-shadow: 0 0 18px rgba(255,209,102,0.22); } }
+@keyframes tower-glow-int  { 0%{ box-shadow: none; } 100%{ box-shadow: 0 0 18px rgba(79,217,255,0.22);  } }
+@keyframes tower-glow-str  { 0%{ box-shadow: none; } 100%{ box-shadow: 0 0 18px rgba(85,242,164,0.22);  } }
+@keyframes tower-glow-com  { 0%{ box-shadow: none; } 100%{ box-shadow: 0 0 18px rgba(180,140,255,0.22); } }
+
+/* ── Smooth page transitions ── */
+#view {
+  animation: view-fade-in 0.22s ease;
+}
+
+@keyframes view-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Prevent animation on every re-render in metallic mode */
+[data-visual-mode="metallic"] #view {
+  animation: none;
+}
+
+/* ── Reduced Motion compliance ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Accessibility: ensure text stays readable ── */
+[data-visual-mode="liquid"] *,
+[data-visual-mode="reduced"] * {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ensure panel content z-index above pseudo shimmer */
+.panel,
+.card,
+.form-panel,
+.player-card,
+.stat-tower,
+.skill-node {
+  isolation: isolate;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   LIQUID GLASS MATERIAL SYSTEM — Surface Upgrade Layer
+   Appended modularly. Pure enhancement, zero layout changes.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. INTERNAL LIGHT MOVEMENT — Caustic sheen on panels ── */
+
+[data-visual-mode="liquid"] .panel,
+[data-visual-mode="liquid"] .card,
+[data-visual-mode="liquid"] .form-panel,
+[data-visual-mode="liquid"] .player-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Moving light streak across surface */
+[data-visual-mode="liquid"] .panel::after,
+[data-visual-mode="liquid"] .card::after,
+[data-visual-mode="liquid"] .form-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    var(--glass-sheen) 48%,
+    rgba(255,255,255,0.032) 52%,
+    transparent 70%
+  );
+  background-size: 250% 100%;
+  animation: caustic-drift 8s ease-in-out infinite;
+  animation-delay: calc(var(--card-index, 0) * 0.9s);
+}
+
+@keyframes caustic-drift {
+  0%   { background-position: 200% center; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { background-position: -50% center; opacity: 0; }
+}
+
+/* Stagger cards with nth-child */
+[data-visual-mode="liquid"] .panel:nth-child(2)::after  { animation-delay: 1.2s; }
+[data-visual-mode="liquid"] .panel:nth-child(3)::after  { animation-delay: 2.4s; }
+[data-visual-mode="liquid"] .panel:nth-child(4)::after  { animation-delay: 3.6s; }
+[data-visual-mode="liquid"] .card:nth-child(2)::after   { animation-delay: 0.7s; }
+[data-visual-mode="liquid"] .card:nth-child(3)::after   { animation-delay: 1.4s; }
+[data-visual-mode="liquid"] .card:nth-child(4)::after   { animation-delay: 2.1s; }
+[data-visual-mode="liquid"] .card:nth-child(5)::after   { animation-delay: 2.8s; }
+[data-visual-mode="liquid"] .card:nth-child(6)::after   { animation-delay: 3.5s; }
+
+/* Reduced mode — static sheen only */
+[data-visual-mode="reduced"] .panel::after,
+[data-visual-mode="reduced"] .card::after,
+[data-visual-mode="reduced"] .form-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    135deg,
+    var(--glass-sheen) 0%,
+    transparent 55%
+  );
+  opacity: 0.6;
+}
+
+/* ── 2. SPECULAR TOP-EDGE HIGHLIGHT ── */
+
+.panel,
+.card,
+.form-panel,
+.player-card,
+.stat-tower,
+.skill-node,
+.week-card,
+.calendar-day,
+.badge {
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-border-top),
+    inset 0 -1px 0 var(--glass-depth);
+}
+
+/* Player card stronger bloom */
+.player-card {
+  box-shadow:
+    var(--glass-shadow),
+    0 0 40px var(--glass-bloom),
+    inset 0 1px 0 var(--glass-border-top),
+    inset 0 -1px 0 var(--glass-depth);
+}
+
+/* ── 3. GLASS DEPTH LAYERING ── */
+
+/* Sidebar feels elevated above bg */
+.sidebar {
+  box-shadow:
+    4px 0 32px rgba(0,0,0,0.4),
+    inset -1px 0 0 var(--glass-border-top);
+}
+
+/* App shell creates z-depth */
+.main {
+  position: relative;
+  z-index: 5;
+}
+
+/* Topbar glass surface */
+.topbar {
+  position: relative;
+}
+
+.topbar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--glass-border-top) 30%,
+    var(--glass-border-top) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ── 4. OLED BLOOM QUALITY — Replace sharp neon glow ── */
+
+/* Softer volumetric bloom on progress fills */
+.progress-fill {
+  box-shadow:
+    0 0 6px var(--panel-glow),
+    0 0 18px var(--glass-bloom),
+    0 0 40px color-mix(in srgb, var(--panel-glow) 40%, transparent);
+}
+
+/* Softer bloom on skill steps */
+.skill-step.active {
+  box-shadow:
+    0 0 6px var(--panel-glow),
+    0 0 14px var(--glass-bloom);
+}
+
+/* Vertical progress bar volumetric bloom */
+.vertical-progress span {
+  box-shadow:
+    0 0 8px var(--panel-glow),
+    0 0 20px var(--glass-bloom),
+    0 0 40px color-mix(in srgb, var(--glass-bloom) 35%, transparent);
+}
+
+/* Week bars bloom */
+.week-bars span {
+  box-shadow:
+    0 0 8px var(--panel-glow),
+    0 0 18px var(--glass-bloom);
+}
+
+/* Habit dot done bloom */
+.habit-dot.done {
+  box-shadow:
+    0 0 6px var(--panel-glow),
+    0 0 14px var(--glass-bloom),
+    0 0 28px color-mix(in srgb, var(--glass-bloom) 40%, transparent);
+}
+
+/* Calendar perfect day bloom */
+.calendar-day.perfect {
+  border-color: var(--green);
+  box-shadow:
+    0 0 12px var(--panel-glow),
+    0 0 28px var(--glass-bloom),
+    inset 0 1px 0 var(--glass-border-top);
+}
+
+/* ── 5. LIQUID HOVER — Glass material response ── */
+
+/* Override previous hover — add glass depth shift */
+.liquid-hover-active {
+  box-shadow:
+    var(--glass-shadow),
+    0 12px 40px var(--glass-bloom),
+    0 0 0 1px var(--glass-border-top),
+    inset 0 1px 0 var(--glass-sheen) !important;
+  border-color: var(--glass-border-top) !important;
+  transform: translateY(-2px) !important;
+  background-image:
+    linear-gradient(135deg, var(--glass-sheen) 0%, transparent 40%),
+    radial-gradient(
+      circle at var(--lh-x, 50%) var(--lh-y, 50%),
+      var(--glow-a) 0%,
+      transparent 65%
+    ) !important;
+}
+
+.liquid-hover-active.player-card {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    var(--glass-shadow),
+    0 16px 48px var(--glass-bloom),
+    0 0 0 1px var(--glass-border-top),
+    inset 0 1px 0 var(--glass-sheen) !important;
+  background-image:
+    linear-gradient(145deg, var(--glass-sheen) 0%, transparent 35%),
+    radial-gradient(
+      circle at var(--lh-x, 50%) var(--lh-y, 50%),
+      var(--glow-a) 0%,
+      transparent 60%
+    ),
+    var(--player-gradient) !important;
+}
+
+/* ── 6. BUTTON GLASS MATERIAL ── */
+
+.primary-button:hover {
+  border-color: var(--glass-border-top) !important;
+  box-shadow:
+    0 6px 22px var(--glass-bloom),
+    0 0 0 1px var(--glass-border-top),
+    inset 0 1px 0 var(--glass-sheen);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.09) 0%, transparent 50%),
+    var(--button-gradient) !important;
+}
+
+.ghost-button:hover {
+  border-color: var(--glass-border-top);
+  box-shadow:
+    0 4px 16px var(--glass-bloom),
+    inset 0 1px 0 var(--glass-sheen);
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, var(--glow-a) 100%);
+}
+
+/* Nav active glass */
+.nav-button.active {
+  box-shadow:
+    0 0 20px var(--glass-bloom),
+    inset 0 1px 0 var(--glass-sheen),
+    inset 0 0 20px var(--glow-a);
+}
+
+/* ── 7. ACHIEVEMENT GLASS ── */
+
+.achievement:not(.locked) {
+  border-color: var(--glass-border-top);
+  box-shadow:
+    var(--glass-shadow),
+    0 0 20px var(--glass-bloom),
+    inset 0 1px 0 var(--glass-sheen);
+}
+
+.achievement-icon {
+  box-shadow: 0 0 14px var(--glass-bloom), inset 0 1px 0 var(--glass-sheen);
+  border: 1px solid var(--glass-border-top);
+  backdrop-filter: blur(4px);
+}
+
+/* ── 8. BOSS CARD GLASS ── */
+
+.boss-card {
+  border-color: var(--glass-border);
+  border-top-color: var(--glass-border-top);
+}
+
+/* ── 9. TOPBAR CONTROLS GLASS ── */
+
+.theme-select,
+.icon-button,
+.danger-button {
+  border-color: var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, transparent 60%), var(--control-bg);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.theme-select:hover,
+.icon-button:hover {
+  border-color: var(--glass-border-top);
+  box-shadow: 0 0 12px var(--glass-bloom), inset 0 1px 0 var(--glass-sheen);
+}
+
+/* ── 10. TASK ADVANCED PANEL ── */
+
+.task-advanced {
+  border-color: var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, transparent 50%), var(--glass-bg);
+  backdrop-filter: blur(6px);
+}
+
+/* ── 11. FORM INPUT GLASS FOCUS ── */
+
+.field input:focus,
+.field select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--glass-border-top) !important;
+  box-shadow:
+    0 0 0 2px var(--glass-bloom),
+    0 0 20px var(--glass-bloom),
+    inset 0 1px 0 var(--glass-sheen) !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%),
+    var(--control-bg) !important;
+}
+
+/* ── 12. STAT TOWER COLORED GLASS ── */
+
+.stat-tower.discipline  {
+  border-top-color: rgba(255, 209, 102, 0.40);
+  box-shadow: inset 0 1px 0 rgba(255,209,102,0.25), 0 4px 16px var(--glass-depth);
+}
+.stat-tower.intelligence {
+  border-top-color: rgba(79, 217, 255, 0.40);
+  box-shadow: inset 0 1px 0 rgba(79,217,255,0.25), 0 4px 16px var(--glass-depth);
+}
+.stat-tower.strength {
+  border-top-color: rgba(85, 242, 164, 0.40);
+  box-shadow: inset 0 1px 0 rgba(85,242,164,0.25), 0 4px 16px var(--glass-depth);
+}
+.stat-tower.communication {
+  border-top-color: rgba(180, 140, 255, 0.40);
+  box-shadow: inset 0 1px 0 rgba(180,140,255,0.25), 0 4px 16px var(--glass-depth);
+}
+.stat-tower.focus {
+  border-top-color: rgba(79, 217, 255, 0.35);
+  box-shadow: inset 0 1px 0 rgba(79,217,255,0.20), 0 4px 16px var(--glass-depth);
+}
+.stat-tower.creativity {
+  border-top-color: rgba(255, 209, 102, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255,209,102,0.20), 0 4px 16px var(--glass-depth);
+}
+
+/* ── 13. STAT CARD COLORED GLASS ── */
+
+.stat-card.discipline   { border-top-color: rgba(255, 209, 102, 0.45); }
+.stat-card.intelligence { border-top-color: rgba(79, 217, 255, 0.45); }
+.stat-card.strength     { border-top-color: rgba(85, 242, 164, 0.45); }
+.stat-card.communication{ border-top-color: rgba(180, 140, 255, 0.45); }
+
+/* ── 14. PROGRESS TRACK GLASS ── */
+
+.progress-track {
+  background: linear-gradient(135deg, var(--glass-sheen) 0%, transparent 50%), var(--track-bg);
+  box-shadow: inset 0 1px 0 var(--glass-sheen), inset 0 -1px 0 var(--glass-depth);
+  border-color: var(--glass-border);
+}
+
+/* ── 15. RIPPLE — Glass material version ── */
+
+.liquid-ripple {
+  background: radial-gradient(
+    circle,
+    var(--glass-sheen) 0%,
+    var(--glow-a) 40%,
+    transparent 70%
+  );
+  border: 1px solid var(--glass-border-top);
+}
+
+/* ── 16. REDUCED MOTION — subtle glass only ── */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-visual-mode="liquid"] .panel::after,
+  [data-visual-mode="liquid"] .card::after,
+  [data-visual-mode="liquid"] .form-panel::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+
+/* ── SPECULAR LIGHT RESPONSE (driven by liquid.js SpecularEngine) ── */
+
+[data-visual-mode="liquid"] .panel,
+[data-visual-mode="liquid"] .card,
+[data-visual-mode="liquid"] .form-panel,
+[data-visual-mode="liquid"] .player-card,
+[data-visual-mode="liquid"] .stat-tower {
+  transition:
+    transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Directional specular highlight that follows cursor light */
+[data-visual-mode="liquid"] .panel::before,
+[data-visual-mode="liquid"] .card::before,
+[data-visual-mode="liquid"] .form-panel::before,
+[data-visual-mode="liquid"] .player-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 60% 40% at var(--spec-x, 30%) var(--spec-y, 20%),
+    var(--glass-sheen) 0%,
+    transparent 70%
+  );
+  opacity: 0.7;
+  transition: background 0.3s ease;
+}
+
+/* Edge gleam — top-left light catch */
+[data-visual-mode="liquid"] .panel,
+[data-visual-mode="liquid"] .card,
+[data-visual-mode="liquid"] .form-panel {
+  background-image:
+    linear-gradient(
+      135deg,
+      var(--glass-sheen) 0%,
+      transparent 28%,
+      transparent 72%,
+      var(--glass-depth) 100%
+    ),
+    var(--panel-gradient) !important;
+}
+
+[data-visual-mode="liquid"] .player-card {
+  background-image:
+    linear-gradient(
+      145deg,
+      var(--glass-sheen) 0%,
+      transparent 30%,
+      transparent 70%,
+      var(--glass-depth) 100%
+    ),
+    var(--player-gradient) !important;
+}
+

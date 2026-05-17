@@ -107,15 +107,23 @@ function renderHabitMonthGrid(state) {
   const dates = monthDates(new Date());
   const today = todayKey();
   return `
+    ${renderHabitTrackerSummary(state, dates)}
+    ${renderWeeklyOverview(state, dates)}
     <div class="habit-matrix" style="--days:${dates.length}">
       <div class="habit-matrix-row habit-matrix-head">
         <span>Habit</span>
+        <span>Goal</span>
+        <span>Done</span>
+        <span>Left</span>
         ${dates.map((date) => `<span class="${date === today ? "today" : ""}">${Number(date.slice(-2))}</span>`).join("")}
         <span>%</span>
       </div>
       ${DAILY_HABITS.map((habit) => `
         <div class="habit-matrix-row">
           <span class="habit-name">${esc(habit.name)}</span>
+          <span class="habit-count">${dates.length}</span>
+          <span class="habit-count done-count">${getHabitMonthlyCompleted(state, habit.id)}</span>
+          <span class="habit-count">${dates.length - getHabitMonthlyCompleted(state, habit.id)}</span>
           ${dates.map((date) => {
             const day = getCalendarDay(state, date);
             const complete = day.habits[habit.id];
@@ -124,8 +132,72 @@ function renderHabitMonthGrid(state) {
           <span class="habit-percent">${getHabitMonthlyPercent(state, habit.id)}%</span>
         </div>
       `).join("")}
+      <div class="habit-matrix-row habit-matrix-foot">
+        <span>Daily %</span>
+        <span>${dates.length * DAILY_HABITS.length}</span>
+        <span>${getMonthlyHabitCompleted(state, dates)}</span>
+        <span>${dates.length * DAILY_HABITS.length - getMonthlyHabitCompleted(state, dates)}</span>
+        ${dates.map((date) => `<span class="daily-cell-percent">${Math.round(calculateHabitProgress(state, date) * 100)}</span>`).join("")}
+        <span>${getMonthlyHabitPercent(state)}%</span>
+      </div>
     </div>
   `;
+}
+
+function renderHabitTrackerSummary(state, dates) {
+  const goal = dates.length * DAILY_HABITS.length;
+  const completed = getMonthlyHabitCompleted(state, dates);
+  const left = goal - completed;
+  return `
+    <div class="habit-summary-strip">
+      <div><span>Global Progress</span><strong>${completed}/${goal}</strong></div>
+      <div><span>Completed</span><strong>${completed}</strong></div>
+      <div><span>Goal</span><strong>${goal}</strong></div>
+      <div><span>Left</span><strong>${left}</strong></div>
+      <div><span>Monthly Rate</span><strong>${getMonthlyHabitPercent(state)}%</strong></div>
+    </div>
+  `;
+}
+
+function renderWeeklyOverview(state, dates) {
+  const weeks = chunkWeeks(dates);
+  return `
+    <div class="weekly-overview">
+      ${weeks.map((week, index) => {
+        const goal = week.length * DAILY_HABITS.length;
+        const completed = getMonthlyHabitCompleted(state, week);
+        const percent = goal ? Math.round((completed / goal) * 100) : 0;
+        return `
+          <article class="week-card">
+            <div class="card-meta"><span>Week ${index + 1}</span><span>${completed}/${goal}</span></div>
+            <div class="week-bars">
+              ${week.map((date) => `<span style="height:${Math.max(8, Math.round(calculateHabitProgress(state, date) * 100))}%"></span>`).join("")}
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="--value:${percent}%"></div></div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function chunkWeeks(dates) {
+  const chunks = [];
+  for (let index = 0; index < dates.length; index += 7) {
+    chunks.push(dates.slice(index, index + 7));
+  }
+  return chunks;
+}
+
+function getHabitMonthlyCompleted(state, habitId) {
+  return monthDates(new Date()).filter((date) => getCalendarDay(state, date).habits[habitId]).length;
+}
+
+function getMonthlyHabitCompleted(state, dates = monthDates(new Date())) {
+  return dates.reduce((sum, date) => {
+    const day = getCalendarDay(state, date);
+    return sum + DAILY_HABITS.filter((habit) => day.habits[habit.id]).length;
+  }, 0);
 }
 
 function getHabitMonthlyPercent(state, habitId) {

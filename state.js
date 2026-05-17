@@ -41,6 +41,70 @@ function defaultAchievements() {
   ];
 }
 
+function createDefaultWorkoutState() {
+  return {
+    metrics: {
+      "Max pushups": [{ date: "2026-01-03", value: 42 }],
+      "Max pull ups": [],
+      "Plank time": [],
+      "L sit hold time": [],
+      Bodyweight: [],
+    },
+    plans: [],
+    selectedPlanId: null,
+    selectedDayId: null,
+    sessions: [],
+    selectedSessionId: null,
+    calendarMonth: todayKey().slice(0, 7),
+    browser: {
+      query: "",
+      category: "All",
+      difficulty: "All",
+      type: "All",
+      progressionGroup: "All",
+    },
+    historyFilters: {
+      planId: "all",
+      exerciseId: "all",
+    },
+    builder: createDefaultWorkoutBuilder(),
+  };
+}
+
+function createDefaultWorkoutBuilder(overrides = {}) {
+  return {
+    open: false,
+    mode: "create",
+    step: "type",
+    trainingType: "",
+    planId: null,
+    dayId: null,
+    category: "",
+    subcategory: "",
+    progressionGroup: "",
+    expandedExerciseId: null,
+    selectedExerciseId: null,
+    query: "",
+    difficulty: "All",
+    type: "All",
+    draft: {
+      planName: "",
+      planColor: "#4fd9ff",
+      planNotes: "",
+      dayName: "",
+      dayColor: "#4fd9ff",
+      dayNotes: "",
+      sets: 3,
+      reps: 10,
+      holdSeconds: 20,
+      weight: 0,
+      restSeconds: 90,
+      notes: "",
+    },
+    ...overrides,
+  };
+}
+
 function createDefaultState() {
   return {
     player: {
@@ -52,6 +116,7 @@ function createDefaultState() {
       lastActiveDate: null,
       activeDays: [],
     },
+    uiTheme: "aether",
     stats: {
       Discipline: 0,
       Intelligence: 0,
@@ -106,15 +171,7 @@ function createDefaultState() {
       name,
       level: 0,
     })),
-    workout: {
-      metrics: {
-        "Max pushups": [{ date: "2026-01-03", value: 42 }],
-        "Max pull ups": [],
-        "Plank time": [],
-        "L sit hold time": [],
-        Bodyweight: [],
-      },
-    },
+    workout: createDefaultWorkoutState(),
     techSkillCompletions: {},
     techSkillSearch: {
       query: "",
@@ -175,6 +232,7 @@ function mergeDefaults(saved, defaults) {
   if (!saved) return defaults;
   const merged = { ...defaults, ...saved };
   merged.player = { ...defaults.player, ...saved.player };
+  merged.uiTheme = saved.uiTheme || defaults.uiTheme;
   merged.stats = { ...defaults.stats, ...saved.stats };
   ensureStats(merged);
   merged.tasks = (merged.tasks || []).map((task) => ({
@@ -185,8 +243,7 @@ function mergeDefaults(saved, defaults) {
   merged.completedTasksByDate = { ...defaults.completedTasksByDate, ...(saved.completedTasksByDate || {}) };
   merged.taskHistoryVisible = Boolean(saved.taskHistoryVisible || defaults.taskHistoryVisible);
   merged.calendarData = { ...defaults.calendarData, ...(saved.calendarData || {}) };
-  merged.workout = { ...defaults.workout, ...saved.workout };
-  merged.workout.metrics = { ...defaults.workout.metrics, ...(saved.workout?.metrics || {}) };
+  merged.workout = normalizeWorkoutState(saved.workout, defaults.workout);
   merged.techSkillCompletions = { ...defaults.techSkillCompletions, ...(saved.techSkillCompletions || {}) };
   merged.techSkillSearch = { ...defaults.techSkillSearch, ...(saved.techSkillSearch || {}) };
   merged.techSkillNav = { ...defaults.techSkillNav, ...(saved.techSkillNav || {}) };
@@ -195,6 +252,96 @@ function mergeDefaults(saved, defaults) {
     return existing ? { ...achievement, ...existing } : achievement;
   });
   return merged;
+}
+
+function normalizeWorkoutState(savedWorkout = {}, defaultWorkout = createDefaultWorkoutState()) {
+  savedWorkout ||= {};
+  const workout = {
+    ...defaultWorkout,
+    ...savedWorkout,
+    metrics: { ...defaultWorkout.metrics, ...(savedWorkout.metrics || {}) },
+    plans: (savedWorkout.plans || defaultWorkout.plans || []).map(normalizeWorkoutPlan),
+    sessions: (savedWorkout.sessions || defaultWorkout.sessions || []).map(normalizeWorkoutSession),
+    browser: { ...defaultWorkout.browser, ...(savedWorkout.browser || {}) },
+    historyFilters: { ...defaultWorkout.historyFilters, ...(savedWorkout.historyFilters || {}) },
+    builder: normalizeWorkoutBuilder(savedWorkout.builder, defaultWorkout.builder),
+  };
+  if (!workout.plans.some((plan) => plan.id === workout.selectedPlanId)) {
+    workout.selectedPlanId = workout.plans[0]?.id || null;
+  }
+  const selectedPlan = workout.plans.find((plan) => plan.id === workout.selectedPlanId);
+  if (!selectedPlan?.days.some((day) => day.id === workout.selectedDayId)) {
+    workout.selectedDayId = selectedPlan?.days[0]?.id || null;
+  }
+  if (!workout.sessions.some((session) => session.id === workout.selectedSessionId)) {
+    workout.selectedSessionId = workout.sessions[0]?.id || null;
+  }
+  workout.calendarMonth ||= todayKey().slice(0, 7);
+  return workout;
+}
+
+function normalizeWorkoutBuilder(savedBuilder = {}, defaultBuilder = createDefaultWorkoutBuilder()) {
+  savedBuilder ||= {};
+  return {
+    ...defaultBuilder,
+    ...savedBuilder,
+    draft: {
+      ...defaultBuilder.draft,
+      ...(savedBuilder.draft || {}),
+    },
+  };
+}
+
+function normalizeWorkoutPlan(plan) {
+  return {
+    id: plan.id || uid("workout-plan"),
+    name: plan.name || "Untitled Plan",
+    color: plan.color || "#4fd9ff",
+    notes: plan.notes || "",
+    days: (plan.days || []).map(normalizeWorkoutDay),
+    createdAt: plan.createdAt || todayKey(),
+  };
+}
+
+function normalizeWorkoutDay(day) {
+  return {
+    id: day.id || uid("workout-day"),
+    name: day.name || "Workout Day",
+    color: day.color || "#4fd9ff",
+    notes: day.notes || "",
+    exercises: (day.exercises || []).map(normalizeWorkoutExercise),
+  };
+}
+
+function normalizeWorkoutExercise(exercise) {
+  return {
+    id: exercise.id || uid("workout-exercise"),
+    exerciseId: exercise.exerciseId || "",
+    name: exercise.name || "Exercise",
+    category: exercise.category || "",
+    type: exercise.type || "reps",
+    sets: Number(exercise.sets || 3),
+    reps: Number(exercise.reps || 10),
+    holdSeconds: Number(exercise.holdSeconds || 20),
+    weight: Number(exercise.weight || 0),
+    restSeconds: Number(exercise.restSeconds || 90),
+    notes: exercise.notes || "",
+  };
+}
+
+function normalizeWorkoutSession(session) {
+  return {
+    id: session.id || uid("workout-session"),
+    date: session.date || todayKey(),
+    planId: session.planId || "",
+    planName: session.planName || "Workout Plan",
+    dayId: session.dayId || "",
+    dayName: session.dayName || "Workout Day",
+    color: session.color || "#4fd9ff",
+    notes: session.notes || "",
+    exercises: (session.exercises || []).map(normalizeWorkoutExercise),
+    createdAt: session.createdAt || todayKey(),
+  };
 }
 
 export function loadGameState() {
@@ -357,6 +504,334 @@ function markAchievementClaimable(state, id) {
 export function getPersonalBest(state, metric) {
   const entries = state.workout.metrics[metric] || [];
   return entries.reduce((best, entry) => Math.max(best, Number(entry.value || 0)), 0);
+}
+
+export function getSelectedWorkoutPlan(state) {
+  return state.workout.plans.find((plan) => plan.id === state.workout.selectedPlanId) || null;
+}
+
+export function getSelectedWorkoutDay(state) {
+  const plan = getSelectedWorkoutPlan(state);
+  return plan?.days.find((day) => day.id === state.workout.selectedDayId) || null;
+}
+
+export function selectWorkoutPlan(state, id) {
+  const plan = state.workout.plans.find((item) => item.id === id);
+  if (!plan) return;
+  state.workout.selectedPlanId = plan.id;
+  state.workout.selectedDayId = plan.days[0]?.id || null;
+}
+
+export function selectWorkoutDay(state, id) {
+  const plan = getSelectedWorkoutPlan(state);
+  if (!plan?.days.some((day) => day.id === id)) return;
+  state.workout.selectedDayId = id;
+}
+
+export function openWorkoutBuilder(state, mode = "create", options = {}) {
+  const plan = options.planId ? state.workout.plans.find((item) => item.id === options.planId) : getSelectedWorkoutPlan(state);
+  const day = options.dayId ? plan?.days.find((item) => item.id === options.dayId) : plan?.days.find((item) => item.id === state.workout.selectedDayId);
+  state.workout.builder = createDefaultWorkoutBuilder({
+    open: true,
+    mode,
+    step: options.step || (mode === "create" ? "type" : "day"),
+    trainingType: options.trainingType || "Calisthenics",
+    planId: plan?.id || null,
+    dayId: day?.id || null,
+    category: "",
+    subcategory: "",
+    progressionGroup: "",
+    draft: {
+      ...createDefaultWorkoutBuilder().draft,
+      planName: plan?.name || "",
+      planColor: plan?.color || "#4fd9ff",
+      planNotes: plan?.notes || "",
+      dayName: day?.name || "",
+      dayColor: day?.color || plan?.color || "#4fd9ff",
+      dayNotes: day?.notes || "",
+    },
+  });
+}
+
+export function closeWorkoutBuilder(state) {
+  state.workout.builder = createDefaultWorkoutBuilder();
+}
+
+export function setWorkoutBuilderStep(state, step) {
+  state.workout.builder.step = step;
+}
+
+export function setWorkoutBuilderValue(state, field, value) {
+  const builder = state.workout.builder;
+  if (field in builder) {
+    builder[field] = value;
+    if (field === "category") {
+      builder.subcategory = "";
+      builder.progressionGroup = "";
+      builder.expandedExerciseId = null;
+      builder.selectedExerciseId = null;
+    }
+    if (field === "subcategory") {
+      builder.progressionGroup = "";
+      builder.expandedExerciseId = null;
+      builder.selectedExerciseId = null;
+    }
+    if (field === "progressionGroup") {
+      builder.expandedExerciseId = null;
+      builder.selectedExerciseId = null;
+    }
+    return;
+  }
+  if (field in builder.draft) {
+    builder.draft[field] = value;
+  }
+}
+
+export function saveWorkoutBuilderPlan(state, data) {
+  const builder = state.workout.builder;
+  if (builder.planId) {
+    updateWorkoutPlan(state, builder.planId, "name", data.name);
+    updateWorkoutPlan(state, builder.planId, "color", data.color);
+    updateWorkoutPlan(state, builder.planId, "notes", data.notes);
+  } else {
+    const plan = createWorkoutPlan(state, data);
+    builder.planId = plan.id;
+  }
+  builder.draft.planName = data.name;
+  builder.draft.planColor = data.color;
+  builder.draft.planNotes = data.notes;
+  builder.step = "day";
+}
+
+export function saveWorkoutBuilderDay(state, data) {
+  const builder = state.workout.builder;
+  if (builder.planId) selectWorkoutPlan(state, builder.planId);
+  if (builder.dayId) {
+    updateWorkoutDay(state, builder.dayId, "name", data.name);
+    updateWorkoutDay(state, builder.dayId, "color", data.color);
+    updateWorkoutDay(state, builder.dayId, "notes", data.notes);
+  } else {
+    const day = createWorkoutDay(state, data);
+    builder.dayId = day?.id || null;
+  }
+  builder.draft.dayName = data.name;
+  builder.draft.dayColor = data.color;
+  builder.draft.dayNotes = data.notes;
+  builder.step = "category";
+}
+
+export function createWorkoutPlan(state, data) {
+  const plan = normalizeWorkoutPlan({
+    id: uid("workout-plan"),
+    name: data.name?.trim(),
+    color: data.color,
+    notes: data.notes?.trim(),
+    days: [],
+    createdAt: todayKey(),
+  });
+  state.workout.plans.unshift(plan);
+  state.workout.selectedPlanId = plan.id;
+  state.workout.selectedDayId = null;
+  return plan;
+}
+
+export function updateWorkoutPlan(state, id, field, value) {
+  const plan = state.workout.plans.find((item) => item.id === id);
+  if (!plan || !["name", "color", "notes"].includes(field)) return;
+  plan[field] = field === "name" ? value.trim() || "Untitled Plan" : value;
+}
+
+export function duplicateWorkoutPlan(state, id) {
+  const plan = state.workout.plans.find((item) => item.id === id);
+  if (!plan) return;
+  const copy = normalizeWorkoutPlan({
+    ...plan,
+    id: uid("workout-plan"),
+    name: `${plan.name} Copy`,
+    days: plan.days.map((day) => ({
+      ...day,
+      id: uid("workout-day"),
+      exercises: day.exercises.map((exercise) => ({ ...exercise, id: uid("workout-exercise") })),
+    })),
+    createdAt: todayKey(),
+  });
+  state.workout.plans.unshift(copy);
+  state.workout.selectedPlanId = copy.id;
+  state.workout.selectedDayId = copy.days[0]?.id || null;
+}
+
+export function deleteWorkoutPlan(state, id) {
+  state.workout.plans = state.workout.plans.filter((plan) => plan.id !== id);
+  if (state.workout.selectedPlanId === id) {
+    state.workout.selectedPlanId = state.workout.plans[0]?.id || null;
+    state.workout.selectedDayId = state.workout.plans[0]?.days[0]?.id || null;
+  }
+}
+
+export function createWorkoutDay(state, data) {
+  const plan = getSelectedWorkoutPlan(state);
+  if (!plan) return null;
+  const day = normalizeWorkoutDay({
+    id: uid("workout-day"),
+    name: data.name?.trim(),
+    color: data.color || plan.color,
+    notes: data.notes?.trim(),
+    exercises: [],
+  });
+  plan.days.push(day);
+  state.workout.selectedDayId = day.id;
+  return day;
+}
+
+export function updateWorkoutDay(state, id, field, value) {
+  const plan = getSelectedWorkoutPlan(state);
+  const day = plan?.days.find((item) => item.id === id);
+  if (!day || !["name", "color", "notes"].includes(field)) return;
+  day[field] = field === "name" ? value.trim() || "Workout Day" : value;
+}
+
+export function duplicateWorkoutDay(state, id) {
+  const plan = getSelectedWorkoutPlan(state);
+  const day = plan?.days.find((item) => item.id === id);
+  if (!plan || !day) return;
+  const copy = normalizeWorkoutDay({
+    ...day,
+    id: uid("workout-day"),
+    name: `${day.name} Copy`,
+    exercises: day.exercises.map((exercise) => ({ ...exercise, id: uid("workout-exercise") })),
+  });
+  plan.days.splice(plan.days.indexOf(day) + 1, 0, copy);
+  state.workout.selectedDayId = copy.id;
+}
+
+export function deleteWorkoutDay(state, id) {
+  const plan = getSelectedWorkoutPlan(state);
+  if (!plan) return;
+  plan.days = plan.days.filter((day) => day.id !== id);
+  if (state.workout.selectedDayId === id) {
+    state.workout.selectedDayId = plan.days[0]?.id || null;
+  }
+}
+
+export function addExerciseToWorkoutDay(state, exercise, config = {}) {
+  const day = getSelectedWorkoutDay(state);
+  if (!day || !exercise) return;
+  day.exercises.push(normalizeWorkoutExercise({
+    id: uid("workout-exercise"),
+    exerciseId: exercise.id,
+    name: exercise.name,
+    category: exercise.category,
+    type: exercise.type,
+    sets: config.sets ?? 3,
+    reps: exercise.type === "hold" ? 0 : config.reps ?? 10,
+    holdSeconds: exercise.type === "hold" ? config.holdSeconds ?? 20 : 0,
+    weight: exercise.type === "weighted" ? config.weight ?? 0 : 0,
+    restSeconds: config.restSeconds ?? 90,
+    notes: config.notes || "",
+  }));
+}
+
+export function addBuilderExerciseToWorkoutDay(state, exercise, config = {}) {
+  const builder = state.workout.builder;
+  if (builder.planId) selectWorkoutPlan(state, builder.planId);
+  if (builder.dayId) selectWorkoutDay(state, builder.dayId);
+  addExerciseToWorkoutDay(state, exercise, config);
+  builder.selectedExerciseId = null;
+  builder.expandedExerciseId = null;
+  builder.step = "progression";
+  builder.draft = {
+    ...builder.draft,
+    sets: 3,
+    reps: 10,
+    holdSeconds: 20,
+    weight: 0,
+    restSeconds: 90,
+    notes: "",
+  };
+}
+
+export function updateWorkoutExercise(state, id, field, value) {
+  const exercise = getSelectedWorkoutDay(state)?.exercises.find((item) => item.id === id);
+  if (!exercise || !["sets", "reps", "holdSeconds", "weight", "restSeconds", "notes"].includes(field)) return;
+  exercise[field] = field === "notes" ? value : Math.max(0, Number(value || 0));
+}
+
+export function moveWorkoutExercise(state, id, direction) {
+  const exercises = getSelectedWorkoutDay(state)?.exercises;
+  if (!exercises) return;
+  const index = exercises.findIndex((exercise) => exercise.id === id);
+  const nextIndex = index + Number(direction || 0);
+  if (index < 0 || nextIndex < 0 || nextIndex >= exercises.length) return;
+  const [exercise] = exercises.splice(index, 1);
+  exercises.splice(nextIndex, 0, exercise);
+}
+
+export function moveWorkoutExerciseToIndex(state, id, targetIndex) {
+  const exercises = getSelectedWorkoutDay(state)?.exercises;
+  if (!exercises) return;
+  const index = exercises.findIndex((exercise) => exercise.id === id);
+  const nextIndex = Math.max(0, Math.min(exercises.length - 1, Number(targetIndex)));
+  if (index < 0 || index === nextIndex) return;
+  const [exercise] = exercises.splice(index, 1);
+  exercises.splice(nextIndex, 0, exercise);
+}
+
+export function duplicateWorkoutExercise(state, id) {
+  const exercises = getSelectedWorkoutDay(state)?.exercises;
+  if (!exercises) return;
+  const index = exercises.findIndex((exercise) => exercise.id === id);
+  if (index < 0) return;
+  exercises.splice(index + 1, 0, normalizeWorkoutExercise({ ...exercises[index], id: uid("workout-exercise") }));
+}
+
+export function removeWorkoutExercise(state, id) {
+  const day = getSelectedWorkoutDay(state);
+  if (!day) return;
+  day.exercises = day.exercises.filter((exercise) => exercise.id !== id);
+}
+
+export function setWorkoutBrowserFilter(state, field, value) {
+  if (!["query", "category", "difficulty", "type", "progressionGroup"].includes(field)) return;
+  state.workout.browser[field] = value;
+}
+
+export function setWorkoutHistoryFilter(state, field, value) {
+  if (!["planId", "exerciseId"].includes(field)) return;
+  state.workout.historyFilters[field] = value;
+}
+
+export function shiftWorkoutCalendarMonth(state, direction) {
+  const [year, month] = String(state.workout.calendarMonth || todayKey().slice(0, 7)).split("-").map(Number);
+  const date = new Date(year, month - 1 + Number(direction || 0), 1);
+  state.workout.calendarMonth = todayKey(date).slice(0, 7);
+}
+
+export function selectWorkoutSession(state, id) {
+  if (!state.workout.sessions.some((session) => session.id === id)) return;
+  state.workout.selectedSessionId = id;
+}
+
+export function logWorkoutSession(state, data) {
+  const plan = state.workout.plans.find((item) => item.id === data.planId);
+  const day = plan?.days.find((item) => item.id === data.dayId);
+  if (!plan || !day || !day.exercises.length) return null;
+  const session = normalizeWorkoutSession({
+    id: uid("workout-session"),
+    date: data.date || todayKey(),
+    planId: plan.id,
+    planName: plan.name,
+    dayId: day.id,
+    dayName: day.name,
+    color: day.color || plan.color,
+    notes: day.notes,
+    exercises: day.exercises.map((exercise) => ({ ...exercise, id: uid("workout-session-exercise") })),
+    createdAt: todayKey(),
+  });
+  state.workout.sessions.unshift(session);
+  state.workout.selectedSessionId = session.id;
+  state.workout.calendarMonth = session.date.slice(0, 7);
+  awardXP(state, 80, { global: true, distribution: { Strength: 0.75, Discipline: 0.25 } }, `Workout: ${day.name}`);
+  return session;
 }
 
 export function distributionFromCategory(category) {

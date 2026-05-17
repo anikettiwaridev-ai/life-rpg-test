@@ -1,6 +1,17 @@
 import { calculateHabitProgress, STATS, todayKey } from "./state.js";
 
-const colors = ["#4fd9ff", "#55f2a4", "#ffd166", "#b48cff", "#ff6978"];
+const fallbackColors = ["#4fd9ff", "#55f2a4", "#ffd166", "#b48cff", "#ff6978"];
+
+function cssVar(name, fallback) {
+  if (typeof document === "undefined") return fallback;
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
+function themePalette() {
+  return ["--cyan", "--green", "--gold", "--violet", "--red"].map((name, index) =>
+    cssVar(name, fallbackColors[index])
+  );
+}
 
 function prepareCanvas(canvas) {
   if (!canvas) return null;
@@ -23,7 +34,7 @@ function lastDays(count) {
 }
 
 function drawAxes(ctx, width, height) {
-  ctx.strokeStyle = "rgba(234, 244, 255, 0.12)";
+  ctx.strokeStyle = cssVar("--line", "rgba(234, 244, 255, 0.12)");
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(34, 18);
@@ -32,10 +43,11 @@ function drawAxes(ctx, width, height) {
   ctx.stroke();
 }
 
-function drawLineChart(canvas, labels, values, color = colors[0]) {
+function drawLineChart(canvas, labels, values, color = null) {
   const prepared = prepareCanvas(canvas);
   if (!prepared) return;
   const { ctx, width, height } = prepared;
+  const strokeColor = color || themePalette()[0];
   drawAxes(ctx, width, height);
   const max = Math.max(10, ...values);
   const plotWidth = width - 56;
@@ -45,7 +57,7 @@ function drawLineChart(canvas, labels, values, color = colors[0]) {
     y: 18 + plotHeight - (value / max) * plotHeight,
   }));
 
-  ctx.strokeStyle = color;
+  ctx.strokeStyle = strokeColor;
   ctx.lineWidth = 3;
   ctx.beginPath();
   points.forEach((point, index) => {
@@ -54,14 +66,14 @@ function drawLineChart(canvas, labels, values, color = colors[0]) {
   });
   ctx.stroke();
 
-  ctx.fillStyle = color;
+  ctx.fillStyle = strokeColor;
   points.forEach((point) => {
     ctx.beginPath();
     ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
     ctx.fill();
   });
 
-  ctx.fillStyle = "rgba(234, 244, 255, 0.68)";
+  ctx.fillStyle = cssVar("--muted", "rgba(234, 244, 255, 0.68)");
   ctx.font = "12px system-ui";
   labels.forEach((label, index) => {
     const x = 34 + (plotWidth * index) / Math.max(1, labels.length - 1);
@@ -73,6 +85,7 @@ function drawBarChart(canvas, labels, values) {
   const prepared = prepareCanvas(canvas);
   if (!prepared) return;
   const { ctx, width, height } = prepared;
+  const colors = themePalette();
   drawAxes(ctx, width, height);
   const max = Math.max(1, ...values);
   const barWidth = Math.max(18, (width - 70) / labels.length - 8);
@@ -81,7 +94,7 @@ function drawBarChart(canvas, labels, values) {
     const h = ((height - 62) * value) / max;
     ctx.fillStyle = colors[index % colors.length];
     ctx.fillRect(x, height - 32 - h, barWidth, h);
-    ctx.fillStyle = "rgba(234, 244, 255, 0.68)";
+    ctx.fillStyle = cssVar("--muted", "rgba(234, 244, 255, 0.68)");
     ctx.font = "12px system-ui";
     ctx.fillText(labels[index].slice(5), x - 2, height - 10);
   });
@@ -91,6 +104,7 @@ function drawPieChart(canvas, labels, values) {
   const prepared = prepareCanvas(canvas);
   if (!prepared) return;
   const { ctx, width, height } = prepared;
+  const colors = themePalette();
   const total = values.reduce((sum, value) => sum + value, 0) || 1;
   let start = -Math.PI / 2;
   const radius = Math.min(width, height) * 0.28;
@@ -113,12 +127,13 @@ function drawPieChart(canvas, labels, values) {
     const y = 34 + index * 26;
     ctx.fillStyle = colors[index % colors.length];
     ctx.fillRect(width * 0.62, y - 10, 12, 12);
-    ctx.fillStyle = "rgba(234, 244, 255, 0.78)";
+    ctx.fillStyle = cssVar("--text", "rgba(234, 244, 255, 0.78)");
     ctx.fillText(`${label}: ${values[index]}`, width * 0.62 + 20, y);
   });
 }
 
 export function drawStatisticsCharts(state) {
+  const colors = themePalette();
   const days = lastDays(7);
   const xpValues = days.map((day) =>
     state.xpHistory.filter((entry) => entry.date === day).reduce((sum, entry) => sum + entry.xp, 0)
@@ -137,6 +152,7 @@ export function drawStatisticsCharts(state) {
 }
 
 export function drawHabitTrendChart(state) {
+  const colors = themePalette();
   const days = lastDays(30);
   drawLineChart(
     document.getElementById("habit-trend-chart"),
@@ -147,6 +163,7 @@ export function drawHabitTrendChart(state) {
 }
 
 export function drawWorkoutChart(canvas, state, metric = "Max pushups") {
+  const colors = themePalette();
   const entries = [...(state.workout.metrics[metric] || [])].sort((a, b) => a.date.localeCompare(b.date));
   const labels = entries.map((entry) => entry.date);
   const values = entries.map((entry) => Number(entry.value || 0));

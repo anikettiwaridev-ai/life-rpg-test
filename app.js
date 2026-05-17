@@ -1,18 +1,46 @@
 import {
   addXP,
+  addBuilderExerciseToWorkoutDay,
+  addExerciseToWorkoutDay,
   addTask,
   archiveCompletedTask,
   awardXP,
   claimAchievement,
   checkAchievements,
+  closeWorkoutBuilder,
+  createWorkoutDay,
+  createWorkoutPlan,
+  deleteWorkoutDay,
+  deleteWorkoutPlan,
   distributionFromCategory,
+  duplicateWorkoutDay,
+  duplicateWorkoutExercise,
+  duplicateWorkoutPlan,
   loadGameState,
+  logWorkoutSession,
+  moveWorkoutExercise,
+  moveWorkoutExerciseToIndex,
+  openWorkoutBuilder,
   persist,
   removeCalendarTask,
+  removeWorkoutExercise,
   replaceState,
+  selectWorkoutDay,
+  selectWorkoutPlan,
+  selectWorkoutSession,
+  saveWorkoutBuilderDay,
+  saveWorkoutBuilderPlan,
+  setWorkoutBuilderStep,
+  setWorkoutBuilderValue,
+  setWorkoutBrowserFilter,
+  setWorkoutHistoryFilter,
+  shiftWorkoutCalendarMonth,
   SKILL_LEVELS,
   todayKey,
   toggleHabit,
+  updateWorkoutDay,
+  updateWorkoutExercise,
+  updateWorkoutPlan,
 } from "./state.js";
 import { clearSave, exportSave, importSave } from "./storage.js";
 import { renderTasks } from "./tasks.js";
@@ -29,9 +57,12 @@ import {
   renderTechSkills,
 } from "./techskills.js";
 import { drawHabitTrendChart, drawStatisticsCharts, drawWorkoutChart } from "./charts.js";
+import { exerciseById } from "./workoutData.js";
+import { initLiquidSystem } from "./liquid.js";
 
 const state = loadGameState();
 let activeTab = "dashboard";
+let draggedWorkoutExerciseId = null;
 
 const tabs = [
   { id: "dashboard", label: "Dashboard", icon: "⌂", render: renderDashboard },
@@ -49,6 +80,10 @@ const tabs = [
 const nav = document.getElementById("nav");
 const view = document.getElementById("view");
 const title = document.getElementById("page-title");
+const themeSelect = document.getElementById("theme-select");
+
+applyTheme(state.uiTheme || "aether");
+if (themeSelect) themeSelect.value = state.uiTheme || "aether";
 
 function uid(prefix) {
   return `${prefix}-${globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : Date.now().toString(36)}`;
@@ -78,15 +113,17 @@ function render() {
   if (activeTab === "dashboard") {
     requestAnimationFrame(() => drawHabitTrendChart(state));
   }
-  if (activeTab === "workout") {
-    requestAnimationFrame(() => drawWorkoutChart(document.getElementById("workout-detail-chart"), state, "Max pushups"));
-  }
   if (activeTab === "tech" && state.techSkillSearch?.focusId) {
     requestAnimationFrame(() => {
       const target = document.querySelector(`[data-skill-anchor="${state.techSkillSearch.focusId}"]`);
       target?.scrollIntoView({ behavior: "smooth", block: "center" });
     });
   }
+}
+
+function applyTheme(theme) {
+  const allowed = new Set(["aether", "crimson", "void", "emerald", "obsidian", "silver", "cobalt"]);
+  document.documentElement.dataset.theme = allowed.has(theme) ? theme : "aether";
 }
 
 function completeTask(id) {
@@ -217,6 +254,51 @@ function handleForm(event) {
     });
   }
   if (type === "workout") logWorkout(form);
+  if (type === "workout-plan") {
+    createWorkoutPlan(state, {
+      name: data.name,
+      color: data.color,
+      notes: data.notes,
+    });
+  }
+  if (type === "workout-day") {
+    createWorkoutDay(state, {
+      name: data.name,
+      color: data.color,
+      notes: data.notes,
+    });
+  }
+  if (type === "workout-session") {
+    logWorkoutSession(state, {
+      date: data.date,
+      planId: data.planId,
+      dayId: data.dayId,
+    });
+  }
+  if (type === "workout-builder-plan") {
+    saveWorkoutBuilderPlan(state, {
+      name: data.name,
+      color: data.color,
+      notes: data.notes,
+    });
+  }
+  if (type === "workout-builder-day") {
+    saveWorkoutBuilderDay(state, {
+      name: data.name,
+      color: data.color,
+      notes: data.notes,
+    });
+  }
+  if (type === "workout-builder-exercise") {
+    addBuilderExerciseToWorkoutDay(state, exerciseById.get(data.exerciseId), {
+      sets: Number(data.sets || 3),
+      reps: Number(data.reps || 0),
+      holdSeconds: Number(data.holdSeconds || 0),
+      weight: Number(data.weight || 0),
+      restSeconds: Number(data.restSeconds || 90),
+      notes: data.notes || "",
+    });
+  }
   if (type === "tech-search") searchTechSkill(form);
   if (type === "reading") logReading(form);
   if (type === "boss") addBoss(form);
@@ -244,6 +326,12 @@ function handleAction(event) {
   const actionTarget = event.target.closest("[data-action]");
   if (!actionTarget) return;
   if (event.type === "click" && actionTarget.matches('input[type="checkbox"]')) return;
+  if (
+    event.type === "click" &&
+    actionTarget.matches('input[data-action^="workout-"], select[data-action^="workout-"], textarea[data-action^="workout-"]')
+  ) {
+    return;
+  }
   const { action, id, index } = actionTarget.dataset;
 
   if (action === "complete-task") completeTask(id);
@@ -260,6 +348,79 @@ function handleAction(event) {
   if (action === "defeat-boss") defeatBoss(id);
   if (action === "delete-boss") state.bosses = state.bosses.filter((boss) => boss.id !== id);
   if (action === "claim-achievement") claimAchievement(state, id);
+  if (action === "workout-open-builder") {
+    openWorkoutBuilder(state, actionTarget.dataset.mode || "create", {
+      planId: id,
+      dayId: actionTarget.dataset.dayId,
+      step: actionTarget.dataset.step,
+    });
+  }
+  if (action === "workout-close-builder") closeWorkoutBuilder(state);
+  if (action === "workout-builder-step") setWorkoutBuilderStep(state, actionTarget.dataset.step);
+  if (action === "workout-builder-type") {
+    setWorkoutBuilderValue(state, "trainingType", actionTarget.dataset.value);
+    setWorkoutBuilderStep(state, "plan");
+  }
+  if (action === "workout-builder-use-day") {
+    const day = state.workout.plans
+      .find((plan) => plan.id === state.workout.builder.planId)
+      ?.days.find((item) => item.id === id);
+    setWorkoutBuilderValue(state, "dayId", id);
+    setWorkoutBuilderValue(state, "dayName", day?.name || "");
+    state.workout.builder.draft.dayName = day?.name || "";
+    state.workout.builder.draft.dayColor = day?.color || state.workout.builder.draft.dayColor;
+    state.workout.builder.draft.dayNotes = day?.notes || "";
+    setWorkoutBuilderStep(state, "category");
+  }
+  if (action === "workout-builder-category") {
+    setWorkoutBuilderValue(state, "category", actionTarget.dataset.value);
+    setWorkoutBuilderStep(state, "subcategory");
+  }
+  if (action === "workout-builder-subcategory") {
+    setWorkoutBuilderValue(state, "subcategory", actionTarget.dataset.value);
+    setWorkoutBuilderStep(state, "progression");
+  }
+  if (action === "workout-builder-progression") setWorkoutBuilderValue(state, "progressionGroup", actionTarget.dataset.value);
+  if (action === "workout-builder-expand-exercise") {
+    setWorkoutBuilderValue(
+      state,
+      "expandedExerciseId",
+      state.workout.builder.expandedExerciseId === id ? null : id
+    );
+  }
+  if (action === "workout-builder-configure-exercise") {
+    setWorkoutBuilderValue(state, "selectedExerciseId", id);
+    setWorkoutBuilderStep(state, "configure");
+  }
+  if (action === "workout-builder-filter") setWorkoutBuilderValue(state, actionTarget.dataset.fieldName, actionTarget.value);
+  if (action === "workout-log-day") {
+    selectWorkoutPlan(state, actionTarget.dataset.planId);
+    selectWorkoutDay(state, actionTarget.dataset.dayId);
+    logWorkoutSession(state, {
+      date: todayKey(),
+      planId: actionTarget.dataset.planId,
+      dayId: actionTarget.dataset.dayId,
+    });
+  }
+  if (action === "workout-select-plan") selectWorkoutPlan(state, id);
+  if (action === "workout-quick-plan") selectWorkoutPlan(state, actionTarget.value);
+  if (action === "workout-update-plan") updateWorkoutPlan(state, id, actionTarget.dataset.fieldName, actionTarget.value);
+  if (action === "workout-duplicate-plan") duplicateWorkoutPlan(state, id);
+  if (action === "workout-delete-plan") deleteWorkoutPlan(state, id);
+  if (action === "workout-select-day") selectWorkoutDay(state, id || actionTarget.value);
+  if (action === "workout-update-day") updateWorkoutDay(state, id, actionTarget.dataset.fieldName, actionTarget.value);
+  if (action === "workout-duplicate-day") duplicateWorkoutDay(state, id);
+  if (action === "workout-delete-day") deleteWorkoutDay(state, id);
+  if (action === "workout-add-exercise") addExerciseToWorkoutDay(state, exerciseById.get(id));
+  if (action === "workout-update-exercise") updateWorkoutExercise(state, id, actionTarget.dataset.fieldName, actionTarget.value);
+  if (action === "workout-move-exercise") moveWorkoutExercise(state, id, actionTarget.dataset.direction);
+  if (action === "workout-duplicate-exercise") duplicateWorkoutExercise(state, id);
+  if (action === "workout-remove-exercise") removeWorkoutExercise(state, id);
+  if (action === "workout-filter-tab") setWorkoutBrowserFilter(state, actionTarget.dataset.fieldName, actionTarget.dataset.value);
+  if (action === "workout-filter-select") setWorkoutBrowserFilter(state, actionTarget.dataset.fieldName, actionTarget.value);
+  if (action === "workout-history-filter") setWorkoutHistoryFilter(state, actionTarget.dataset.fieldName, actionTarget.value);
+  if (action === "workout-calendar-month") shiftWorkoutCalendarMonth(state, actionTarget.dataset.direction);
+  if (action === "workout-select-session") selectWorkoutSession(state, id);
   if (action === "tech-nav-next" || action === "tech-breadcrumb") {
     state.techSkillNav = {
       path: decodeTechPath(actionTarget.dataset.path),
@@ -301,7 +462,49 @@ nav.addEventListener("click", (event) => {
 view.addEventListener("submit", handleForm);
 view.addEventListener("click", handleAction);
 view.addEventListener("change", (event) => {
-  if (event.target.matches('[data-action="toggle-boss-objective"], [data-action="toggle-tech-skill"], [data-action="complete-task"]')) handleAction(event);
+  if (event.target.matches('[data-action="toggle-boss-objective"], [data-action="toggle-tech-skill"], [data-action="complete-task"], [data-action^="workout-"]')) handleAction(event);
+});
+view.addEventListener("input", (event) => {
+  const builderSearch = event.target.closest('[data-action="workout-builder-search"]');
+  if (builderSearch) {
+    const cursor = builderSearch.selectionStart;
+    setWorkoutBuilderValue(state, "query", builderSearch.value);
+    render();
+    requestAnimationFrame(() => {
+      const search = document.querySelector('[data-action="workout-builder-search"]');
+      search?.focus();
+      search?.setSelectionRange(cursor, cursor);
+    });
+    return;
+  }
+  const target = event.target.closest('[data-action="workout-search"]');
+  if (!target) return;
+  const cursor = target.selectionStart;
+  setWorkoutBrowserFilter(state, "query", target.value);
+  render();
+  requestAnimationFrame(() => {
+    const search = document.querySelector('[data-action="workout-search"]');
+    search?.focus();
+    search?.setSelectionRange(cursor, cursor);
+  });
+});
+view.addEventListener("dragstart", (event) => {
+  const row = event.target.closest("[data-workout-drag-id]");
+  if (!row) return;
+  draggedWorkoutExerciseId = row.dataset.workoutDragId;
+  event.dataTransfer.effectAllowed = "move";
+});
+view.addEventListener("dragover", (event) => {
+  if (!draggedWorkoutExerciseId || !event.target.closest("[data-workout-index]")) return;
+  event.preventDefault();
+});
+view.addEventListener("drop", (event) => {
+  const row = event.target.closest("[data-workout-index]");
+  if (!draggedWorkoutExerciseId || !row) return;
+  event.preventDefault();
+  moveWorkoutExerciseToIndex(state, draggedWorkoutExerciseId, row.dataset.workoutIndex);
+  draggedWorkoutExerciseId = null;
+  render();
 });
 view.addEventListener("focusout", (event) => {
   if (!event.target.matches('[data-field="player-name"]')) return;
@@ -312,12 +515,20 @@ view.addEventListener("focusout", (event) => {
 });
 
 document.getElementById("export-data").addEventListener("click", () => exportSave(state));
+themeSelect?.addEventListener("change", (event) => {
+  state.uiTheme = event.target.value;
+  applyTheme(state.uiTheme);
+  persist(state);
+  render();
+});
 document.getElementById("import-data").addEventListener("change", async (event) => {
   const [file] = event.target.files;
   if (!file) return;
   try {
     const imported = await importSave(file);
     replaceState(state, imported);
+    applyTheme(state.uiTheme || "aether");
+    if (themeSelect) themeSelect.value = state.uiTheme || "aether";
     render();
   } catch (error) {
     alert("That save file could not be imported.");
@@ -334,4 +545,5 @@ document.getElementById("reset-data").addEventListener("click", () => {
   render();
 });
 
+initLiquidSystem();
 render();
