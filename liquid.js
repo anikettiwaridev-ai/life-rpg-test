@@ -35,6 +35,8 @@ const VisualModeManager = (() => {
     LiquidHover.setEnabled(mode !== MODES.METALLIC);
     RippleSystem.setEnabled(mode !== MODES.METALLIC);
     SpecularEngine.setEnabled(mode === MODES.LIQUID);
+    BorderTracer.setEnabled(mode === MODES.LIQUID);
+    DepthBreathing.setEnabled(mode === MODES.LIQUID);
     BackgroundEngine.setMode(mode);
   }
 
@@ -66,9 +68,13 @@ const VisualModeManager = (() => {
   function cycleMode() {
     const order = [MODES.LIQUID, MODES.REDUCED, MODES.METALLIC];
     const next = order[(order.indexOf(currentMode) + 1) % order.length];
-    set(next);
-    const btn = document.getElementById('visual-mode-btn');
-    if (btn) btn.innerHTML = getModeIcon(next);
+    // Fire the page-wide burst/dissolve transition before switching
+    ModeTransition.fire(currentMode, next);
+    setTimeout(() => {
+      set(next);
+      const btn = document.getElementById('visual-mode-btn');
+      if (btn) btn.innerHTML = getModeIcon(next);
+    }, next === MODES.METALLIC ? 800 : 200);
   }
 
   return { get, set, onModeChange, init, MODES };
@@ -660,6 +666,310 @@ const SpecularEngine = (() => {
   return { init, setEnabled };
 })();
 
+// ─── MODE TRANSITION BURST ──────────────────────────────────────────────────
+// When toggling visual mode, particles erupt from all card borders then dissolve
+
+const ModeTransition = (() => {
+  let canvas, ctx, W, H;
+  let active = false;
+  let bursts = []; // {x, y, particles[]}
+
+  function init() {
+    canvas = document.createElement('canvas');
+    canvas.id = 'liquid-transition-canvas';
+    canvas.style.cssText = `
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      pointer-events:none;z-index:8888;
+    `;
+    document.body.appendChild(canvas);
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    });
+    loop();
+  }
+
+  function spawnBorderParticles() {
+    const [c1, c2] = ThemeColors.getParticleColor();
+    const els = document.querySelectorAll(
+      '.panel, .card, .player-card, .form-panel, .stat-tower, .week-card, .workout-plan-card, .nav-button'
+    );
+    els.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.width === 0) return;
+      // Spawn particles around the perimeter
+      const perimeter = 2 * (r.width + r.height);
+      const count = Math.min(40, Math.floor(perimeter / 14));
+      for (let i = 0; i < count; i++) {
+        // Pick a random point on the border
+        const t = Math.random() * perimeter;
+        let bx, by;
+        if (t < r.width) { bx = r.left + t; by = r.top; }
+        else if (t < r.width + r.height) { bx = r.right; by = r.top + (t - r.width); }
+        else if (t < 2 * r.width + r.height) { bx = r.right - (t - r.width - r.height); by = r.bottom; }
+        else { bx = r.left; by = r.bottom - (t - 2 * r.width - r.height); }
+
+        const c = Math.random() > 0.5 ? c1 : c2;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 0.4 + Math.random() * 1.4;
+        bursts.push({
+          x: bx, y: by,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 0.5,
+          r: 1 + Math.random() * 2.2,
+          life: 1.0,
+          decay: 0.012 + Math.random() * 0.018,
+          color: c,
+        });
+      }
+    });
+  }
+
+  function fire(fromMode, toMode) {
+    active = true;
+    bursts = [];
+    spawnBorderParticles();
+    // Stagger a second wave
+    setTimeout(() => spawnBorderParticles(), 120);
+  }
+
+  function loop() {
+    requestAnimationFrame(loop);
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    if (!active || bursts.length === 0) { active = false; return; }
+
+    for (let i = bursts.length - 1; i >= 0; i--) {
+      const p = bursts[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy -= 0.025;
+      p.life -= p.decay;
+      if (p.life <= 0) { bursts.splice(i, 1); continue; }
+      const alpha = p.life * 0.8;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `${p.color}${alpha})`;
+      ctx.fill();
+    }
+    if (bursts.length === 0) active = false;
+  }
+
+  return { init, fire };
+})();
+
+
+// ─── BORDER TRACER ──────────────────────────────────────────────────────────
+// A glowing hotspot that continuously travels around card borders
+
+const BorderTracer = (() => {
+  let canvas, ctx, W, H;
+  let enabled = true;
+  let tracers = []; // one per tracked element
+  let attachedEls = new Set();
+  let t = 0;
+
+  function setEnabled(v) {
+    enabled = v;
+    if (!v && ctx) ctx.clearRect(0, 0, W, H);
+  }
+
+  function attachAll() {
+    const selector = '.panel, .card, .player-card, .stat-tower, .week-card, .workout-plan-card, .form-panel';
+    const els = document.querySelectorAll(selector);
+    // Remove stale
+    tracers = tracers.filter(tr => document.contains(tr.el));
+    attachedEls = new Set(tracers.map(tr => tr.el));
+    els.forEach(el => {
+      if (attachedEls.has(el)) return;
+      attachedEls.add(el);
+      tracers.push({
+        el,
+        progress: Math.random(), // start at random point on path
+        speed: 0.0006 + Math.random() * 0.0004, // different speeds
+      });
+    });
+  }
+
+  function init() {
+    canvas = document.createElement('canvas');
+    canvas.id = 'liquid-tracer-canvas';
+    canvas.style.cssText = `
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      pointer-events:none;z-index:3;
+    `;
+    document.body.insertBefore(canvas, document.body.firstChild);
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    });
+
+    const observer = new MutationObserver(attachAll);
+    observer.observe(document.getElementById('view') || document.body, {
+      childList: true, subtree: false,
+    });
+    attachAll();
+    loop();
+  }
+
+  function getPosOnRect(r, progress) {
+    const perim = 2 * (r.width + r.height);
+    const dist = progress * perim;
+    const br = 8; // approximate border-radius offset
+    if (dist < r.width) return { x: r.left + dist, y: r.top };
+    if (dist < r.width + r.height) return { x: r.right, y: r.top + (dist - r.width) };
+    if (dist < 2 * r.width + r.height) return { x: r.right - (dist - r.width - r.height), y: r.bottom };
+    return { x: r.left, y: r.bottom - (dist - 2 * r.width - r.height) };
+  }
+
+  function loop() {
+    requestAnimationFrame(loop);
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    if (!enabled || VisualModeManager.get() !== MODES.LIQUID) return;
+
+    const [c1] = ThemeColors.getParticleColor();
+    const q = PerfMonitor.getQuality();
+    // Limit count for performance
+    const max = Math.floor(tracers.length * q);
+
+    for (let i = 0; i < Math.min(max, tracers.length); i++) {
+      const tr = tracers[i];
+      if (!document.contains(tr.el)) continue;
+      tr.progress = (tr.progress + tr.speed) % 1;
+
+      const r = tr.el.getBoundingClientRect();
+      if (r.width < 10 || r.height < 10) continue;
+
+      const pos = getPosOnRect(r, tr.progress);
+
+      // Main bright hotspot
+      const glow = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 22);
+      glow.addColorStop(0, `${c1}0.70)`);
+      glow.addColorStop(0.3, `${c1}0.28)`);
+      glow.addColorStop(1, `${c1}0)`);
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, 22, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+
+      // Trailing fade — draw a few steps behind
+      for (let step = 1; step <= 5; step++) {
+        const trailProg = ((tr.progress - step * 0.004) + 1) % 1;
+        const tp = getPosOnRect(r, trailProg);
+        const alpha = (0.22 - step * 0.04);
+        if (alpha <= 0) continue;
+        const tg = ctx.createRadialGradient(tp.x, tp.y, 0, tp.x, tp.y, 12);
+        tg.addColorStop(0, `${c1}${alpha})`);
+        tg.addColorStop(1, `${c1}0)`);
+        ctx.beginPath();
+        ctx.arc(tp.x, tp.y, 12, 0, Math.PI * 2);
+        ctx.fillStyle = tg;
+        ctx.fill();
+      }
+    }
+  }
+
+  return { init, setEnabled, attachAll };
+})();
+
+
+// ─── DEPTH BREATHING ────────────────────────────────────────────────────────
+// Panels gently pulse their glow opacity on slow staggered sine cycles
+
+const DepthBreathing = (() => {
+  let panels = [];
+  let t = 0;
+  let enabled = true;
+
+  function setEnabled(v) {
+    enabled = v;
+    if (!v) panels.forEach(p => { if (document.contains(p.el)) p.el.style.removeProperty('--breath'); });
+  }
+
+  function attachAll() {
+    const els = document.querySelectorAll('.panel, .card, .player-card, .stat-tower');
+    panels = Array.from(els).map((el, i) => ({ el, phase: i * 0.6 }));
+  }
+
+  function update() {
+    requestAnimationFrame(update);
+    if (!enabled || VisualModeManager.get() !== MODES.LIQUID) return;
+    t += 0.006;
+    panels.forEach(p => {
+      if (!document.contains(p.el)) return;
+      // 0.85 → 1.0 gentle breathe
+      const breath = 0.85 + 0.15 * (0.5 + 0.5 * Math.sin(t + p.phase));
+      p.el.style.setProperty('--breath', breath.toFixed(3));
+    });
+  }
+
+  function init() {
+    const observer = new MutationObserver(attachAll);
+    observer.observe(document.getElementById('view') || document.body, {
+      childList: true, subtree: false,
+    });
+    attachAll();
+    update();
+  }
+
+  return { init, setEnabled, attachAll };
+})();
+
+
+// ─── SCROLL REVEAL ──────────────────────────────────────────────────────────
+// Panels fade + drift up when entering the viewport (one-shot per element)
+
+const ScrollReveal = (() => {
+  let observer;
+
+  function init() {
+    // Only run in liquid/reduced mode
+    if (VisualModeManager.get() === MODES.METALLIC) return;
+
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add('reveal-enter');
+        el.addEventListener('animationend', () => {
+          el.classList.remove('reveal-enter');
+          el.style.opacity = '';
+          el.style.transform = '';
+        }, { once: true });
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.08 });
+
+    attachAll();
+
+    // Re-attach after renders
+    const viewEl = document.getElementById('view');
+    if (viewEl) {
+      new MutationObserver(attachAll).observe(viewEl, { childList: true });
+    }
+  }
+
+  function attachAll() {
+    if (!observer || VisualModeManager.get() === MODES.METALLIC) return;
+    document.querySelectorAll(
+      '.panel:not(.reveal-seen), .card:not(.reveal-seen), .player-card:not(.reveal-seen), .stat-tower:not(.reveal-seen)'
+    ).forEach(el => {
+      el.classList.add('reveal-seen');
+      observer.observe(el);
+    });
+  }
+
+  return { init };
+})();
+
+
 // ─── MAIN INIT ───────────────────────────────────────────────────────────────
 
 export function initLiquidSystem() {
@@ -675,6 +985,10 @@ export function initLiquidSystem() {
     RippleSystem.init();
     LiquidHover.init();
     PanelShimmer.init();
+    ModeTransition.init();
+    BorderTracer.init();
+    DepthBreathing.init();
+    ScrollReveal.init();
     VisualModeManager.init();
 
     // Apply initial mode
@@ -685,13 +999,17 @@ export function initLiquidSystem() {
     LiquidHover.setEnabled(mode !== MODES.METALLIC);
     RippleSystem.setEnabled(mode !== MODES.METALLIC);
     SpecularEngine.setEnabled(mode === MODES.LIQUID);
+    BorderTracer.setEnabled(mode === MODES.LIQUID);
+    DepthBreathing.setEnabled(mode === MODES.LIQUID);
     BackgroundEngine.setMode(mode);
 
-    // Re-attach hover on every render cycle
+    // Re-attach hover + tracer + breathing on every render cycle
     const viewEl = document.getElementById('view');
     if (viewEl) {
       const mo = new MutationObserver(() => {
         LiquidHover.attachAll();
+        BorderTracer.attachAll();
+        DepthBreathing.attachAll();
       });
       mo.observe(viewEl, { childList: true });
     }
